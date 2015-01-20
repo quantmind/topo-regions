@@ -1,0 +1,7 @@
+{
+    "name": "maps",
+    "description": "Roll your own TopoJSON from Natural Earth.",
+    "devDependencies": {
+        "topojson": ""
+    }
+}
