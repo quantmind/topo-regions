@@ -1,7 +1,13 @@
 {
-    "name": "maps",
+    "name": "geo-maps",
     "description": "Roll your own TopoJSON from Natural Earth.",
     "devDependencies": {
-        "topojson": ""
+        "d3-dsv": "1.0",
+        "d3-geo-projection": "2.3",
+        "ndjson-cli": "0.3",
+        "shapefile": "0.6",
+        "topojson-server": "3.0",
+        "topojson-client": "3.0",
+        "topojson-simplify": "3.0"
     }
 }

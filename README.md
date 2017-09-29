@@ -28,7 +28,7 @@ Or, add this to your ~/.bash_profile:
 export PKG_CONFIG_PATH="/opt/X11/lib/pkgconfig"
 ```
 
-If you want to install this software using an alternate method see the website for [TopoJSON](https://github.com/mbostock/topojson). I also recommend reading my tutorial, [Let’s Make a Map](http://bost.ocks.org/mike/map/).
+If you want to install this software using an alternate method see the website for [TopoJSON](https://github.com/mbostock/topojson). I also recommend reading the tutorial, [Let’s Make a Map](http://bost.ocks.org/mike/map/).
 
 ## Make Targets
 
