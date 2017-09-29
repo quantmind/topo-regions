@@ -1,31 +1,12 @@
 # World Atlas TopoJSON
 
-This repository provides a convenient mechanism for generating TopoJSON files from [Natural Earth](http://naturalearthdata.com/).
+This repository provides a convenient mechanism for generating [TopoJSON][] files from [Natural Earth](http://www.naturalearthdata.com/)’s [vector data](http://www.naturalearthdata.com/downloads/), version 2.0.0.
 
-## Installing via Homebrew
+## Installing
 
-Before you can run `make`, you’ll need to install Node.js and `ogr2ogr`. Here’s how to do that using [Homebrew](http://mxcl.github.com/homebrew/) on Mac OS X:
-
+Before you can run `make`, you’ll need to install the node packages
 ```bash
-brew install node gdal
-```
-
-And then, from this repository’s root directory, install the dependencies:
-
-```bash
-npm install
-```
-
-If the installation of [node-canvas](https://github.com/learnboost/node-canvas) fails for you, try
-
-```bash
-PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig npm install canvas
-```
-
-Or, add this to your ~/.bash_profile:
-
-```bash
-export PKG_CONFIG_PATH="/opt/X11/lib/pkgconfig"
+yarn install
 ```
 
 If you want to install this software using an alternate method see the website for [TopoJSON](https://github.com/mbostock/topojson). I also recommend reading the tutorial, [Let’s Make a Map](http://bost.ocks.org/mike/map/).
@@ -59,3 +40,6 @@ Shapefiles
 To obtain information of of shapefile:
 
     ogrinfo -al ne_110m_admin_0_countries.shp >> info.txt
+
+
+[TopoJSON]: https://github.com/topojson/topojson
