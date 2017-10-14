@@ -25,6 +25,12 @@ world() {
     > world/$1.tsv
 }
 
-world 110m 0_countries
-world 50m 0_countries
-world 50m 1_states_provinces
+region() {
+  world_shp $1 $2
+  mkdir -p world
+  shp2json build/ne_$1_admin_$2.shp -o world/$1.geo.json
+}
+
+region 110m 0_countries
+region 50m 0_countries
+region 10m 1_states_provinces
