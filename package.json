@@ -2,6 +2,15 @@
     "name": "topo-regions",
     "version": "0.0.1",
     "description": "Pre-built TopoJSON from Global Administrative Area",
+    "author": {
+        "name": "quantmind.com",
+        "email": "message@quantmind.com"
+    },
+    "keywords": [
+        "topojson",
+        "geojson",
+        "shapefile"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/quantmind/topo-regions.git"
@@ -16,8 +25,6 @@
         "topojson-simplify": "3.0"
     },
     "scripts": {
-        "prepare": "bash dev/map.sh",
-        "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags && mkdir -p ../giottojs.org/latest && mkdir -p ../giottojs.org/topo-regions/${VERSION} && cp build/* ../giottojs.org/topo-regions/${VERSION}/ && cp build/* ../giottojs.org/latest/ && cd ../giottojs.org && git add topo-regions/${VERSION} latest && git commit -a -m \"topo-regions ${VERSION}\" && git push",
-        "release": "publish"
+        "prepare": "bash dev/map.sh"
     }
 }
