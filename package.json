@@ -1,5 +1,6 @@
 {
-    "name": "geo-maps",
+    "name": "topo-regions",
+    "version": "0.0.1",
     "description": "Pre-built TopoJSON from Global Administrative Area",
     "repository": {
         "type": "git",
@@ -16,7 +17,7 @@
     },
     "scripts": {
         "prepare": "bash dev/map.sh",
-        "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags && mkdir -p ../giottojs.org/latest && mkdir -p ../giottojs.org/d3-visualize/${VERSION} && cp build/* ../giottojs.org/d3-visualize/${VERSION}/ && cp build/* ../giottojs.org/latest/ && cd ../giottojs.org && git add d3-visualize/${VERSION} latest && git commit -a -m \"d3-visualize ${VERSION}\" && git push",
+        "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags && mkdir -p ../giottojs.org/latest && mkdir -p ../giottojs.org/topo-regions/${VERSION} && cp build/* ../giottojs.org/topo-regions/${VERSION}/ && cp build/* ../giottojs.org/latest/ && cd ../giottojs.org && git add topo-regions/${VERSION} latest && git commit -a -m \"topo-regions ${VERSION}\" && git push",
         "release": "publish"
     }
 }

@@ -1,7 +1,6 @@
-# World Atlas TopoJSON
+# Regions TopoJSON
 
-This repository provides a convenient mechanism for generating [TopoJSON][] files from [Natural Earth](http://www.naturalearthdata.com/)’s [vector data](http://www.naturalearthdata.com/downloads/)
-version 2.0.0.
+This repository provides a convenient mechanism for generating [TopoJSON][] files from [[GADM database of Global Administrative Areas](http://www.gadm.org/).
 
 ## Installing
 
@@ -16,6 +15,7 @@ I also recommend reading the [command-line cartography](https://medium.com/@mbos
 ## Useful Resources
 
 * [GADM database of Global Administrative Areas](http://www.gadm.org/)
+* [Natural Earth](http://www.naturalearthdata.com/downloads)’s vector data
 * Use [mapshaper.org](http://mapshaper.org/) to explore shape/geojson/topojson files
 
 
