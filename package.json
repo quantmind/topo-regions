@@ -1,6 +1,6 @@
 {
     "name": "topo-regions",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Pre-built TopoJSON from Global Administrative Area",
     "author": {
         "name": "quantmind.com",
@@ -20,8 +20,8 @@
         "d3-geo-projection": "2.3",
         "ndjson-cli": "0.3",
         "shapefile": "0.6",
-        "topojson-server": "3.0",
         "topojson-client": "3.0",
+        "topojson-server": "3.0",
         "topojson-simplify": "3.0"
     },
     "scripts": {
