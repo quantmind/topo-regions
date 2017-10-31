@@ -25,10 +25,19 @@ state () {
     cp build/$1/$1_adm$2.csv world/$1_adm$2.csv
 }
 
-state FRA 1
-state ITA 1
-state ESP 1
 state CHE 1
+state CYP 1
+state DEU 1
+state DNK 1
+state ESP 1
+state FRA 1
 state GBR 1
 state GBR 2
-state DEU 1
+state ITA 1
+state NOR 1
+state POL 1
+state PRT 1
+state ROU 1
+state RUS 1
+state SVN 1
+state SWE 1

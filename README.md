@@ -11,6 +11,10 @@ To create the maps:
 yarn install
 ```
 
+## Maps
+
+Maps are available at the ``world`` directory of the installed package or directly from [unpkg](https://unpkg.com/topo-regions/).
+
 ## Useful Resources
 
 * [GADM][] database of Global Administrative Areas
