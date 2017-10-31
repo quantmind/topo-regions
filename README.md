@@ -1,6 +1,8 @@
-# Regions TopoJSON
+# topo-regions
 
-This repository provides a convenient mechanism for generating [TopoJSON][] files from [[GADM database of Global Administrative Areas](http://www.gadm.org/).
+[![NPM](https://badge.fury.io/js/topo-regions.svg)](https://www.npmjs.com/package/topo-regions)
+
+This repository provides a convenient mechanism for generating [TopoJSON][] files from [GADM][] database of Global Administrative Areas.
 
 ## Installing
 
@@ -20,3 +22,4 @@ I also recommend reading the [command-line cartography](https://medium.com/@mbos
 
 
 [TopoJSON]: https://github.com/topojson/topojson
+[GDAM]: http://www.gadm.org

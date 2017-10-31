@@ -18,10 +18,8 @@ state () {
     fi
     mkdir -p world
     # shp2json build/$1/$1_adm$2.shp -o world/$1_adm$2.geo.json
-    geo2topo -q 1e5 -n regions=<( \
-            shp2json -n build/$1/$1_adm$2.shp \
-            | ndjson-map 'd.id = d.properties.NAME_$2, delete d.properties, d' \
-            | geostitch -n) \
+    geo2topo -q 1e3 -n regions=<( \
+            shp2json -n build/$1/$1_adm$2.shp) \
         | topomerge country=regions \
         > world/$1_adm$2.topo.json
     cp build/$1/$1_adm$2.csv world/$1_adm$2.csv

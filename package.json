@@ -1,6 +1,6 @@
 {
     "name": "topo-regions",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Pre-built TopoJSON from Global Administrative Area",
     "author": {
         "name": "quantmind.com",
