@@ -14,6 +14,7 @@
 <body>
     <nav class="navbar sticky-top navbar-light bg-light">
         <a class="navbar-brand" href="/">Topo Regions</a>
+        <a class="nav-link" href="https://github.com/quantmind/topo-regions"><i class="ion-social-github"></i></a>
     </nav>
     <div class="container-fluid">
         <div class="row">
