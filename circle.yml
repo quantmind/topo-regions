@@ -1,0 +1,28 @@
+machine:
+
+  node:
+    version: 8.5.0
+
+
+general:
+  branches:
+    ignore:
+      - gh-pages
+
+
+dependencies:
+  override:
+    - yarn install
+
+
+test:
+  override:
+    - yarn site
+
+
+deployment:
+  publish:
+    branch: master
+    commands:
+      - ./dev/gitbot.sh
+      - ./dev/publish.sh
