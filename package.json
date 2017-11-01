@@ -35,6 +35,7 @@
         "ndjson-cli": "0.3",
         "node-sass": "4.5",
         "package-preamble": "0.1",
+        "publish": "0.6",
         "rollup": "0.50",
         "rollup-plugin-babel": "3.0",
         "rollup-plugin-commonjs": "8.2",
@@ -57,6 +58,7 @@
         "minify": "uglifyjs --preamble \"$(preamble)\" website/assets/site.js -c -m -o website/assets/site.min.js",
         "site": "./dev/build.sh && yarn lint && yarn rollup && yarn minify && yarn css",
         "serve": "http-server website/",
-        "maps": "bash dev/map.sh"
+        "prepare": "bash dev/map.sh",
+        "release": "publish"
     }
 }
