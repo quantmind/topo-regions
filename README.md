@@ -12,6 +12,7 @@ This repository provides a convenient mechanism for generating [TopoJSON][] file
 To create the maps:
 ```bash
 yarn install
+yarn maps
 ```
 
 ## Maps
