@@ -25,5 +25,5 @@ deployment:
   publish:
     branch: master
     commands:
-      - ./site/gitbot.sh
-      - ./site/publish.sh
+      - ./dev/gitbot.sh
+      - ./dev/publish.sh

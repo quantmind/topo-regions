@@ -8,6 +8,7 @@ mkdir -p website/assets
 cp node_modules/es6-promise/dist/es6-promise.auto.min.js website/assets/
 cp node_modules/whatwg-fetch/fetch.js website/assets/
 #
-node site/site.js
+node dev/site.js
+cp -r site/config website/.
 # copy circle.yml
 cp circle.yml website/.

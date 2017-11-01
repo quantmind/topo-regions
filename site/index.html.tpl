@@ -12,6 +12,18 @@
     <script src="assets/site.js?version={{ version }}" type="application/javascript"></script>
 </head>
 <body>
-    
+    <nav class="navbar sticky-top navbar-light bg-light">
+        <a class="navbar-brand" href="/">Topo Regions</a>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <d3form schema="config/countries.json"></d3form>
+            </div>
+            <div class="col-sm-6">
+                <visual schema="config/regions.json"></visual>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
