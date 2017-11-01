@@ -16,15 +16,47 @@
         "url": "https://github.com/quantmind/topo-regions.git"
     },
     "devDependencies": {
+        "babel-core": "6.26",
+        "babel-eslint": "8.0",
+        "babel-plugin-external-helpers": "6.22",
+        "babel-polyfill": "6.26",
+        "babel-preset-env": "1.6",
+        "babel-preset-es2015-rollup": "3.0",
+        "babelify": "8.0",
+        "bootstrap": "4.0.0-beta",
         "d3-dsv": "1.0",
         "d3-geo-projection": "2.3",
+        "d3-view": "0.8",
+        "d3-visualize": "0.3",
+        "es6-promise": "4.1",
+        "eslint": "4.10",
+        "handlebars": "4",
+        "http-server": "0.10",
         "ndjson-cli": "0.3",
+        "node-sass": "4.5",
+        "package-preamble": "0.1",
+        "rollup": "0.50",
+        "rollup-plugin-babel": "3.0",
+        "rollup-plugin-commonjs": "8.2",
+        "rollup-plugin-json": "2.3",
+        "rollup-plugin-node-resolve": "3.0",
+        "rollup-plugin-sourcemaps": "0.4",
+        "rollup-watch": "4.3",
         "shapefile": "0.6",
         "topojson-client": "3.0",
         "topojson-server": "3.0",
-        "topojson-simplify": "3.0"
+        "topojson-simplify": "3.0",
+        "uglify-js": "3.1",
+        "whatwg-fetch": "2.0"
     },
     "scripts": {
-        "prepare": "bash dev/map.sh"
+        "lint": "eslint site",
+        "rollup": "rollup -c site/rollup.config.js --banner \"$(preamble)\"",
+        "dev": "rollup -c site/rollup.config.js -w",
+        "css": "node-sass site/site.scss website/assets/site.css --include-path node_modules --output-style compressed",
+        "minify": "uglifyjs --preamble \"$(preamble)\" website/assets/site.js -c -m -o website/assets/site.min.js",
+        "site": "./site/build.sh && yarn rollup && yarn minify && yarn css",
+        "serve": "http-server website/",
+        "maps": "bash dev/map.sh"
     }
 }

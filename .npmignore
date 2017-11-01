@@ -1,3 +1,5 @@
 dev/
 build/
+site/
+website/
 yarn.lock

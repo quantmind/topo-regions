@@ -2,6 +2,10 @@
 
 [![NPM](https://badge.fury.io/js/topo-regions.svg)](https://www.npmjs.com/package/topo-regions)
 
+[![CircleCI](https://circleci.com/gh/quantmind/topo-regions.svg?style=svg&circle-token=f84972c3cf4e8f17d74066ead28544da990115c3)](https://circleci.com/gh/quantmind/topo-regions)
+[![devDependency Status](https://david-dm.org/quantmind/topo-regions/dev-status.svg)](https://david-dm.org/quantmind/topo-regions#info=devDependencies)
+
+
 This repository provides a convenient mechanism for generating [TopoJSON][] files from [GADM][] database of Global Administrative Areas.
 
 ## Installing
