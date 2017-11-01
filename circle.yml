@@ -17,7 +17,6 @@ dependencies:
 
 test:
   override:
-    - yarn maps
     - yarn site
 
 
