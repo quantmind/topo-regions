@@ -9,19 +9,21 @@
     <link href="assets/site.css?version={{ version }}" media="all" rel="stylesheet" />
     <script src="assets/es6-promise.auto.min.js" type="application/javascript"></script>
     <script src="assets/fetch.js" type="application/javascript"></script>
-    <script src="assets/site.js?version={{ version }}" type="application/javascript"></script>
+    {{#unless min}}
+        <script type="application/javascript">
+            window.development = true;
+        </script>
+    {{/unless}}
+    <script src="assets/site{{ min }}.js?version={{ version }}" type="application/javascript"></script>
 </head>
 <body>
-    <nav class="navbar sticky-top navbar-light bg-light">
-        <a class="navbar-brand" href="/">Topo Regions</a>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="">Topo Regions</a>
         <a class="nav-link" href="https://github.com/quantmind/topo-regions"><i class="ion-social-github"></i></a>
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6">
-                <d3form schema="config/countries.json"></d3form>
-            </div>
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <visual schema="config/regions.json"></visual>
             </div>
         </div>

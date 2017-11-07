@@ -1,7 +1,14 @@
-import assign from 'object-assign';
 export {version as mapsVersion} from '../package.json';
-import {view, viewForms, viewBootstrapForms, viewReady, viewEvents} from 'd3-view';
+export * from 'd3-view';
+
+import {assign, inBrowser} from 'd3-let';
+import {view, viewForms, viewBootstrapForms, viewReady, viewEvents, viewProviders} from 'd3-view';
 import {visualComponents, visuals} from 'd3-visualize';
+
+if (inBrowser) {
+    if (window.development) viewProviders.setDebug(true);
+}
+
 
 assign(visuals.options.dataContext, {
     $geoDataCode (d) {
@@ -12,7 +19,6 @@ assign(visuals.options.dataContext, {
     },
 
     $region() {
-        //var country = getCountry(this.filters.country),
         //    source = this.$geoDataCode(),
         //    store = this.dataStore;
     }

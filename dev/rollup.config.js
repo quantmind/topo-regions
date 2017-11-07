@@ -24,7 +24,9 @@ export default {
         }),
         commonjs({
             include: [
-                'node_modules/**'
+                'node_modules/**',
+                // required for d3-visualize with link
+                '../d3-visualize/node_modules/**'
             ]
         }),
         sourcemaps(),

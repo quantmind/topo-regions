@@ -4,6 +4,7 @@ const Handlebars = require('handlebars');
 
 const templateFile = 'site/index.html.tpl';
 const pagesPath = 'site/pages/';
+const MIN = process.env.CIRCLECI ? '.min' : '';
 
 
 function capFirst (text) {
