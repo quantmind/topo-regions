@@ -5,97 +5,6 @@
 	(factory((global.d3 = global.d3 || {})));
 }(this, (function (exports) { 'use strict';
 
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
-
-'use strict';
-/* eslint-disable no-unused-vars */
-
-var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (err) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (getOwnPropertySymbols) {
-			symbols = getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-
 var version = "0.0.4";
 
 var prefix = "$";
@@ -228,6 +137,97 @@ function set(object, f) {
   return set;
 }
 
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+'use strict';
+/* eslint-disable no-unused-vars */
+
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
 var ostring = Object.prototype.toString;
 var inBrowser = typeof window !== 'undefined' && ostring.call(window) !== '[object Object]';
 
@@ -278,17 +278,17 @@ var pop = function (obj, prop) {
 
 var prefix$3 = '[d3-view-debug]';
 
-var debug = function (msg) {
-    if (providers.logger.debug) providers.logger.debug(msg);
+var viewDebug = function (msg) {
+    if (viewProviders.logger.debug) viewProviders.logger.debug(msg);
 };
 
 function defaultDebug(msg) {
-    providers.logger.info(prefix$3 + ' ' + msg);
+    viewProviders.logger.info(prefix$3 + ' ' + msg);
 }
 
 logger.debug = null;
 
-var providers = {
+var viewProviders = {
     // log messages
     logger: logger,
     // fetch remote resources
@@ -308,10 +308,14 @@ function fetch() {
 var prefix$2 = '[d3-view]';
 
 var warn = function (msg) {
-    providers.logger.warn(prefix$2 + ' ' + msg);
+    viewProviders.logger.warn(prefix$2 + ' ' + msg);
 };
 
-var properties = ['disabled', 'readonly', 'required'];
+var properties = map({
+    disabled: 'disabled',
+    readonly: 'readOnly',
+    required: 'required'
+});
 
 //
 //  d3-attr-<attr> directive
@@ -327,7 +331,8 @@ var attr = {
     refresh: function refresh(model, value) {
         if (this.arg === 'class') return this.refreshClass(value);
         if (isArray(value)) return warn('Cannot apply array to attribute ' + this.arg);
-        if (properties.indexOf(this.arg) > -1) this.sel.property(this.arg, value || false);else this.sel.attr(this.arg, value || null);
+        var prop = properties.get(this.arg);
+        if (prop) this.sel.property(prop, value || false);else this.sel.attr(this.arg, value || null);
     },
     refreshClass: function refreshClass(value) {
         var sel = this.sel;
@@ -350,12 +355,6 @@ var attr = {
     }
 };
 
-var slice = function (obj) {
-    var idx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-    return Array.prototype.slice.call(obj, idx);
-};
-
 //
 //  d3-html
 //  =============
@@ -367,10 +366,18 @@ var html = {
     refresh: function refresh(model, html) {
         if (isNumber(html)) html = '' + html;
         if (isString(html)) {
-            this.sel.html(html);
-            var children = slice(this.el.children);
-            for (var i = 0; i < children.length; ++i) {
-                this.select(children[i]).mount();
+            var dir = this,
+                sel = this.sel,
+                transition = this.passes ? this.transition(sel) : null;
+            if (transition) {
+                transition.style('opacity', 0).on('end', function () {
+                    sel.html(html);
+                    dir.selectChildren().mount();
+                    dir.transition(sel).style('opacity', 1);
+                });
+            } else {
+                sel.html(html);
+                this.selectChildren().mount();
             }
         }
     }
@@ -631,10 +638,10 @@ var timeout$1 = function (callback, delay, time) {
 // of the event loop.
 // Calling this method multiple times in the dsame event loop tick produces
 // always the initial promise
-var debounce = function (callback, delay) {
+var viewDebounce = function (callback, delay) {
     var promise = null;
 
-    return function () {
+    function debounce() {
         if (promise !== null) return promise;
         var self = this,
             args = arguments;
@@ -652,7 +659,13 @@ var debounce = function (callback, delay) {
         });
 
         return promise;
+    }
+
+    debounce.promise = function () {
+        return promise;
     };
+
+    return debounce;
 };
 
 var xhtml = "http://www.w3.org/1999/xhtml";
@@ -1578,7 +1591,7 @@ function createValueType(proto) {
 
 function refreshFunction(vType, model, attrName) {
 
-    return debounce(function () {
+    return viewDebounce(function () {
         model.$set(attrName, vType.value());
     });
 }
@@ -1779,7 +1792,8 @@ function set$3(type, name, callback) {
 
 // require handlebar
 function compile$1(text) {
-    var handlebars = inBrowser ? window.handlebars : require('handlebars');
+    var handlebars = viewProviders.handlebars;
+    if (!handlebars) handlebars = inBrowser ? window.handlebars : require('handlebars');
     if (handlebars) return handlebars.compile(text);
     warn('compile function requires handlebars');
 }
@@ -1789,6 +1803,7 @@ function html$1(source, context) {
         if (context) {
             var s = compile$1(source);
             if (!s) return source;
+            source = s;
         } else return source;
     }
     return source(context);
@@ -1829,7 +1844,7 @@ var base$1 = {
     // d3-view object
     isd3: true,
     //
-    providers: providers,
+    providers: viewProviders,
     //
     // Create a view element, same as createElement but compile it
     viewElement: htmlElement,
@@ -1850,7 +1865,7 @@ var base$1 = {
 
     // Shortcut for fetch function in providers
     fetch: function fetch(url, options) {
-        var fetch = providers.fetch;
+        var fetch = viewProviders.fetch;
         return arguments.length == 1 ? fetch(url) : fetch(url, options);
     },
 
@@ -1880,10 +1895,10 @@ var base$1 = {
         var asElement = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
         var cache = this.cache;
-        if (url in cache) return resolvedPromise(asElement ? htmlElement(cache[url]) : cache[url]);
+        if (url in cache) return resolvedPromise(render(cache[url], context, asElement));
         return this.fetchText(url).then(function (template) {
             cache[url] = template;
-            return asElement ? htmlElement(template, context) : html$1(template, context);
+            return render(template, context, asElement);
         });
     },
 
@@ -1893,6 +1908,12 @@ var base$1 = {
         if (callback === null) return el.on(name, null);else el.on(name, function () {
             return callback(event);
         });
+    },
+
+    //
+    selectChildren: function selectChildren(el) {
+        if (!arguments.length) el = this.el;
+        return this.selectAll(Array.prototype.slice.call(el.children));
     }
 };
 
@@ -1901,6 +1922,32 @@ function jsonResponse(response) {
     var ct = (response.headers.get('content-type') || '').split(';')[0];
     if (ct === 'application/json') return response.json();else throw new Error('Expected JSON content type, got ' + ct);
 }
+
+function render(template, context, asElement) {
+    return asElement ? htmlElement(template, context) : html$1(template, context);
+}
+
+viewProviders.transition = {
+    duration: 0
+};
+
+var viewBase = objectAssign(base$1, {
+    //
+    // return a transition object if possible
+    transition: function transition(sel) {
+        if (!arguments.length) sel = this.sel;
+        var duration = this.transitionDuration(sel);
+        if (duration > 0) return sel.transition(this.uid).duration(duration);
+    },
+    transitionDuration: function transitionDuration(sel) {
+        if (!arguments.length) sel = this.sel;
+        if (sel && isFunction(sel.transition) && sel.size()) {
+            var duration = sel.attr('data-transition-duration');
+            return +(duration === null ? viewProviders.transition.duration : duration);
+        }
+        return 0;
+    }
+});
 
 // Code originally from https://github.com/soney/jsep
 // Copyright (c) 2013 Stephen Oney, http://jsep.from.so/
@@ -2573,6 +2620,7 @@ function identifiers(expr, all) {
                 return identifiers(elem, all);
             });
             break;
+        case code.LOGICAL_EXP:
         case code.BINARY_EXP:
             identifiers(expr.left, all);
             identifiers(expr.right, all);
@@ -2694,7 +2742,7 @@ var ddispatch = function () {
             return this;
         },
 
-        trigger: debounce(function () {
+        trigger: viewDebounce(function () {
             events.apply('change', this, arguments);
             _triggered += 1;
         }),
@@ -2706,7 +2754,7 @@ var ddispatch = function () {
 
 //
 // Initialise a model
-function asModel(model, initials) {
+function asModel(model, initials, parent, isolated) {
     var events = map(),
         Child = null;
 
@@ -2717,6 +2765,16 @@ function asModel(model, initials) {
         $events: {
             get: function get() {
                 return events;
+            }
+        },
+        parent: {
+            get: function get() {
+                return parent;
+            }
+        },
+        isolated: {
+            get: function get() {
+                return isolated;
             }
         }
     });
@@ -2732,19 +2790,7 @@ function asModel(model, initials) {
 function createChildConstructor(model) {
 
     function Child(initials) {
-        asModel(this, initials);
-        Object.defineProperties(this, {
-            parent: {
-                get: function get() {
-                    return model;
-                }
-            },
-            isolated: {
-                get: function get() {
-                    return false;
-                }
-            }
-        });
+        asModel(this, initials, model, false);
     }
 
     Child.prototype = model;
@@ -2792,14 +2838,12 @@ function reactive(model, key, value) {
         if (lazy) newValue = lazy.get.call(model);
         if (newValue === value) return;
         // trigger lazy callbacks
-        var oldValue = value;
-        value = typeValue(newValue, oldValue);
         //
         // Fire model events
-        var modelName = model.name || 'model';
-        debug('updating ' + modelName + '.' + key);
-        model.$change(key, oldValue); // attribute change event
-        model.$change(); // model change event
+        var modelName = model.$$name || 'model';
+        viewDebug('updating ' + modelName + '.' + key);
+        model.$change(key, value).$change();
+        value = typeValue(newValue, value);
     }
 
     function property() {
@@ -2908,12 +2952,18 @@ function removeEvent(event, name) {
     if (name) event.on('change.' + name, null);else event.on('change', null);
 }
 
+var slice = function (obj) {
+    var idx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+    return Array.prototype.slice.call(obj, idx);
+};
+
 // trigger change event on a model reactive attribute
 var $change = function (attribute) {
     var name = arguments.length ? attribute : '',
         event = this.$events.get(name),
         args = slice(arguments, 1);
-    if (event) event.trigger.apply(this, args);else warn('attribute \'' + name + '\' is not a reactive property this model');
+    if (event) event.trigger.apply(this, args);else if (!this.isolated) this.parent.$change(name);else warn('attribute \'' + name + '\' is not a reactive property this model');
     return this;
 };
 
@@ -2931,8 +2981,8 @@ var $isreactive = function (attr) {
 //  Model class
 //
 //  The model is at the core of d3-view reactive data component
-function Model(initials) {
-    asModel(this, initials);
+function Model(initials, parent) {
+    asModel(this, initials, parent, true);
 }
 
 function model(initials) {
@@ -2957,24 +3007,7 @@ Object.defineProperty(Model.prototype, 'root', {
 });
 
 function $new(initials) {
-
-    var parent = this,
-        child = model(initials);
-
-    Object.defineProperties(child, {
-        parent: {
-            get: function get() {
-                return parent;
-            }
-        },
-        isolated: {
-            get: function get() {
-                return true;
-            }
-        }
-    });
-
-    return child;
+    return new Model(initials, this);
 }
 
 //
@@ -2992,8 +3025,7 @@ function $new(initials) {
 //  * refresh
 //  * destroy
 //
-var prototype = objectAssign({}, base$1, {
-    priority: 1,
+var prototype = {
 
     // hooks
     create: function create(expression) {
@@ -3027,6 +3059,7 @@ var prototype = objectAssign({}, base$1, {
             refresh = function refresh() {
             var value = dir.expression ? dir.expression.eval(model$$1) : undefined;
             dir.refresh(model$$1, value);
+            dir.passes++;
         };
 
         // Bind expression identifiers with model
@@ -3101,7 +3134,7 @@ var prototype = objectAssign({}, base$1, {
             dir.destroy();
         });
     }
-});
+};
 
 // Directive constructor
 var createDirective = function (obj) {
@@ -3110,12 +3143,13 @@ var createDirective = function (obj) {
         this.el = el;
         this.name = attr.name;
         this.arg = arg;
+        this.passes = 0;
         var expr = sel(uid(this)).create(attr.value);
         if (expr) this.expression = viewExpression(expr);
         if (!this.active) this.active = !attr.value || this.expression;
     }
 
-    Directive.prototype = objectAssign({}, prototype, obj);
+    Directive.prototype = objectAssign({}, viewBase, prototype, obj);
 
     function directive(el, attr, arg) {
         return new Directive(el, attr, arg);
@@ -3161,10 +3195,27 @@ var maybeJson = function (value) {
     return value;
 };
 
+var DATAPREFIX = 'data-';
+
+var dataAttributes = function (attrs) {
+    var keys = Object.keys(attrs);
+    var p = void 0;
+    return keys.reduce(function (o, key) {
+        if (key.substring(0, 5) === DATAPREFIX) {
+            p = key.split('-').splice(1).reduce(function (s, key, idx) {
+                s += idx ? key.substring(0, 1).toUpperCase() + key.substring(1) : key;
+                return s;
+            }, '');
+            o[p] = pop(attrs, key);
+        }
+        return o;
+    }, {});
+};
+
 var viewEvents = dispatch('message', 'component-created', 'component-mount', 'component-mounted');
 
 // prototype for both views and components
-var protoComponent = objectAssign({}, base$1, {
+var protoComponent = {
     //
     // hooks
     render: function render() {},
@@ -3183,34 +3234,49 @@ var protoComponent = objectAssign({}, base$1, {
             var sel$$1 = this.select(el),
                 directives = sel$$1.directives(),
                 dattrs = directives ? directives.attrs : attributes(el),
-                model = this.model;
-            var key = void 0,
-                value = void 0,
-                target = void 0;
+                parentModel = this.parent.model,
+                datum = sel$$1.datum();
 
-            data = objectAssign({}, sel$$1.datum(), data);
+            var props = this.props,
+                model = this.model,
+                modelData = objectAssign(dataAttributes(dattrs), datum, data),
+                key = void 0,
+                value = void 0;
+
+            data = objectAssign({}, datum, data);
 
             // override model keys from data object and element attributes
             for (key in model) {
-                target = data[key] === undefined ? dattrs : data;
-                if (target[key] !== undefined) model[key] = maybeJson(pop(target, key));
+                value = pop(modelData, key);
+                if (value !== undefined) {
+                    if (isString(value)) {
+                        if (parentModel.$isReactive(value)) value = reactiveParentProperty(value);else value = maybeJson(value);
+                    }
+                    model[key] = value;
+                }
             }
 
             // Create model
-            this.model = model = this.parent.model.$child(model);
+            this.model = model = parentModel.$child(model);
+            if (isArray(props)) props = props.reduce(function (o, key) {
+                o[key] = undefined;
+                return o;
+            }, {});
 
-            if (isArray(this.props)) {
-                this.props.forEach(function (prop) {
-                    value = maybeJson(data[prop] === undefined ? dattrs[prop] : data[prop]);
+            if (isObject(props)) {
+                Object.keys(props).forEach(function (key) {
+                    value = maybeJson(modelData[key] === undefined ? data[key] === undefined ? dattrs[key] : data[key] : modelData[key]);
                     if (value !== undefined) {
                         // data point to a model attribute
                         if (isString(value) && model[value]) value = model[value];
-                        data[prop] = value;
+                        data[key] = value;
+                    } else if (props[key] !== undefined) {
+                        data[key] = props[key];
                     }
                 });
             }
             // give the model a name
-            if (!model.name) model.name = this.name;
+            if (!model.$$name) model.$$name = this.name;
             //
             // create the new element from the render function
             var newEl = this.render(data, dattrs, el);
@@ -3220,10 +3286,10 @@ var protoComponent = objectAssign({}, base$1, {
             });
         }
     }
-});
+};
 
 // factory of View and Component constructors
-function createComponent(name, o, prototype, coreDirectives) {
+function createComponent(name, o, coreDirectives) {
     if (isFunction(o)) o = { render: o };
 
     var obj = objectAssign({}, o),
@@ -3299,7 +3365,7 @@ function createComponent(name, o, prototype, coreDirectives) {
         viewEvents.call('component-created', undefined, this);
     }
 
-    Component.prototype = objectAssign({}, prototype, obj);
+    Component.prototype = objectAssign({}, viewBase, protoComponent, obj);
 
     function component(options) {
         return new Component(options);
@@ -3406,6 +3472,15 @@ function attributes(element) {
         attrs[attr.name] = attr.value;
     }
     return attrs;
+}
+
+function reactiveParentProperty(value) {
+    return {
+        reactOn: [value],
+        get: function get() {
+            return this[value];
+        }
+    };
 }
 
 // No value, it has its own directive
@@ -3549,7 +3624,7 @@ function mountElement(element, vm, data, onMounted) {
 
 //
 // prototype for views
-var protoView = objectAssign({}, protoComponent, {
+var protoView = {
 
     use: function use(plugin) {
         if (isObject(plugin)) plugin.install(this);else plugin(this);
@@ -3557,7 +3632,7 @@ var protoView = objectAssign({}, protoComponent, {
     },
 
     addComponent: function addComponent(name, obj) {
-        var component = createComponent(name, obj, protoComponent);
+        var component = createComponent(name, obj);
         this.components.set(name, component);
         return component;
     },
@@ -3578,7 +3653,7 @@ var protoView = objectAssign({}, protoComponent, {
             }
         }
     }
-});
+};
 
 function element$2(el) {
     if (!el) return warn('element not defined, pass an identifier or an HTMLElement object');
@@ -3586,8 +3661,6 @@ function element$2(el) {
         element = d3el.node();
     if (!element) warn('could not find ' + el + ' element');else return element;
 }
-
-var forView = createComponent('forView', null, protoView);
 
 //
 //  d3-for directive
@@ -3618,30 +3691,48 @@ var d3For = {
     },
     refresh: function refresh(model, items) {
         if (!isArray(items)) return;
+        var d = void 0;
 
         var creator = this.creator,
             selector = creator.tagName + '.' + this.itemClass,
             itemName = this.itemName,
             sel = this.sel,
-            entries = sel.selectAll(selector).data(items),
+            allItems = sel.selectAll(selector),
+            entries = allItems.filter(function () {
+            d = this.__d3_view__.model[itemName];
+            return items.indexOf(d) > -1;
+        }).data(items),
+            exits = allItems.filter(function () {
+            d = this.__d3_view__.model[itemName];
+            return items.indexOf(d) === -1;
+        }),
+            forView = createComponent('forView', protoView),
             vm = sel.view();
 
-        var x = void 0;
+        var x = void 0,
+            el = void 0,
+            fel = void 0,
+            tr = void 0;
 
-        entries.exit().remove();
+        (this.transition(exits) || exits).style('opacity', 0).remove();
 
         entries.enter().append(function () {
-            return creator.cloneNode(true);
+            el = creator.cloneNode(true);
+            fel = vm.select(el);
+            if (vm.transitionDuration(fel) > 0) fel.style('opacity', 0);
+            return el;
         }).classed(this.itemClass, true).each(function (d, index) {
             x = { index: index };
             x[itemName] = d;
             forView({
                 model: x,
                 parent: vm
-            }).mount(this, function (vm) {
+            }).mount(this, function (fv) {
                 // replace the item with a property from the model
                 // This allow for reactivity when d is an object
-                items[index] = vm.model[itemName];
+                items[index] = fv.model[itemName];
+                tr = fv.transition();
+                if (tr) tr.style('opacity', 1);
             });
         }).merge(entries).each(function (d) {
             // update model itemName property
@@ -3658,12 +3749,23 @@ var d3For = {
 //
 var d3If = {
     mount: function mount(model) {
-        this.display = this.sel.style('display');
+        var sel = this.sel;
+        this.display = sel.style('display');
+        this.opacity = sel.style('opacity');
         if (!this.display || this.display === 'none') this.display = 'block';
         return model;
     },
     refresh: function refresh(model, value) {
-        if (value) this.sel.style('display', this.display);else this.sel.style('display', 'none');
+        var sel = this.sel,
+            transition = this.passes ? this.transition(sel) : null;
+
+        if (value) sel.style('display', this.display);else if (!transition) sel.style('display', 'none');
+
+        if (transition) {
+            if (value) transition.style('opacity', this.opacity);else transition.style('opacity', 0).on('end', function () {
+                return sel.style('display', 'none');
+            });
+        }
     }
 };
 
@@ -3724,11 +3826,32 @@ function destroy() {
 var coreDirectives = extendDirectives(map(), directives);
 
 // the view constructor
-var view = createComponent('view', null, protoView, coreDirectives);
+var view = function (config) {
+    var viewClass = createComponent('view', protoView, coreDirectives);
+    return viewClass(config);
+};
+
+//
+//  viewMount
+//  =============
+//
+//  Mount an existing dom element el with compiled html
+//
+//  * data: optional object for the first component
+//  * onMount : optional onMount callback
+//
+//  Return a Promise
+var mount$1 = function (el, html, data, onMount) {
+    var p = select(el).html(html).mount(data, onMount);
+    if (!p) p = new Promise(function (resolve) {
+        resolve();
+    });
+    return p;
+};
 
 // Add callback to execute when the DOM is ready
 var viewReady = function (callback) {
-    providers.readyCallbacks.push(callback);
+    viewProviders.readyCallbacks.push(callback);
     if (document.readyState !== 'complete') {
         document.addEventListener('DOMContentLoaded', _completed);
         // A fallback to window.onload, that will always work
@@ -3744,20 +3867,20 @@ function _completed() {
 
 function domReady() {
     var callback = void 0;
-    while (providers.readyCallbacks.length) {
-        callback = providers.readyCallbacks.shift();
+    while (viewProviders.readyCallbacks.length) {
+        callback = viewProviders.readyCallbacks.shift();
         timeout$1(callback);
     }
 }
 
-var providers$1 = {
+var providers = {
     logger: logger
 };
 
 var prefix$5 = '[d3-form]';
 
 var warn$1 = function (msg) {
-    providers$1.logger.warn(prefix$5 + ' ' + msg);
+    providers.logger.warn(prefix$5 + ' ' + msg);
 };
 
 //
@@ -4200,7 +4323,7 @@ function submit$1(e) {
         e.stopPropagation();
     }
 
-    var fetch = providers$1.fetch,
+    var fetch = providers.fetch,
         data = form.$inputData(),
         options = {};
 
@@ -4328,9 +4451,9 @@ var form = {
         model.actions = {};
         model.form = model; // inject self for children models
         //
-        var schema = data['schema'];
+        var schema = data.schema;
         if (isString(schema)) {
-            var fetch = providers$1.fetch;
+            var fetch = providers.fetch;
             return fetch(schema, { method: 'GET' }).then(function (response) {
                 if (response.status === 200) return response.json().then(build);else warn$1('Could not load form from ' + schema + ': status ' + response.status);
             });
@@ -4361,7 +4484,7 @@ var viewForms = {
         // list of form Extensions
         vm.$formExtensions = [];
         for (var key in vm.providers) {
-            providers$1[key] = vm.providers[key];
+            providers[key] = vm.providers[key];
         }
     },
 
@@ -4565,6 +4688,8 @@ var require$1 = requireFrom(function (name) {
 });
 
 require$1.libs = map();
+
+var version$2 = "0.9.3";
 
 var ascending$1 = function (a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -4897,2695 +5022,6 @@ var sum = function (values, valueof) {
   return sum;
 };
 
-var prefix$7 = '[d3-view-debug]';
-
-var viewDebug = function (msg) {
-    if (viewProviders.logger.debug) viewProviders.logger.debug(msg);
-};
-
-function defaultDebug$1(msg) {
-    viewProviders.logger.info(prefix$7 + ' ' + msg);
-}
-
-logger.debug = null;
-
-var viewProviders = {
-    // log messages
-    logger: logger,
-    // fetch remote resources
-    fetch: fetch$1(),
-    // callbacks when page is loaded in browser
-    readyCallbacks: [],
-    // Set/unset debug
-    setDebug: function setDebug(active) {
-        if (!arguments.length || active) this.logger.debug = isFunction(active) ? active : defaultDebug$1;else this.logger.debug = null;
-    }
-};
-
-function fetch$1() {
-    if (inBrowser) return window.fetch;
-}
-
-var prefix$6 = '[d3-view]';
-
-var warn$2 = function (msg) {
-    viewProviders.logger.warn(prefix$6 + ' ' + msg);
-};
-
-var properties$1 = ['disabled', 'readonly', 'required'];
-
-//
-//  d3-attr-<attr> directive
-//  ==============================
-//
-//  Create a one-way binding between a model and a HTML element attribute
-//
-var attr$1 = {
-    create: function create(expression) {
-        if (!this.arg) return warn$2('Cannot bind to empty attribute. Specify :<attr-name>');
-        return expression;
-    },
-    refresh: function refresh(model, value) {
-        if (this.arg === 'class') return this.refreshClass(value);
-        if (isArray(value)) return warn$2('Cannot apply array to attribute ' + this.arg);
-        if (properties$1.indexOf(this.arg) > -1) this.sel.property(this.arg, value || false);else this.sel.attr(this.arg, value || null);
-    },
-    refreshClass: function refreshClass(value) {
-        var sel = this.sel;
-
-        if (!isArray(value)) value = [value];
-
-        if (this.oldValue) this.oldValue.forEach(function (entry) {
-            if (entry) sel.classed(entry, false);
-        });
-
-        this.oldValue = value.map(function (entry) {
-            var exist = true;
-            if (isArray(entry)) {
-                exist = entry[1];
-                entry = entry[0];
-            }
-            if (entry) sel.classed(entry, exist);
-            return entry;
-        });
-    }
-};
-
-var slice$2 = function (obj) {
-    var idx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-    return Array.prototype.slice.call(obj, idx);
-};
-
-//
-//  d3-html
-//  =============
-//  attach html or text to the innerHtml property and mount components if required
-//
-//  Usage:
-//      <div id="foo" d3-html="output"></div>
-var html$2 = {
-    refresh: function refresh(model, html) {
-        if (isNumber(html)) html = '' + html;
-        if (isString(html)) {
-            this.sel.html(html);
-            var children = slice$2(this.el.children);
-            for (var i = 0; i < children.length; ++i) {
-                this.select(children[i]).mount();
-            }
-        }
-    }
-};
-
-//
-// Evaluate a callback (optional) with given delay (optional)
-//
-// if delay is not given or 0, the callback is evaluated at the next tick
-// of the event loop.
-// Calling this method multiple times in the dsame event loop tick produces
-// always the initial promise
-var viewDebounce = function (callback, delay) {
-    var promise = null;
-
-    return function () {
-        if (promise !== null) return promise;
-        var self = this,
-            args = arguments;
-
-        promise = new Promise(function (resolve, reject) {
-
-            timeout$1(function () {
-                promise = null;
-                try {
-                    resolve(callback ? callback.apply(self, args) : undefined);
-                } catch (err) {
-                    reject(err);
-                }
-            }, delay);
-        });
-
-        return promise;
-    };
-};
-
-var sel$1 = function (o) {
-
-    Object.defineProperty(o, 'sel', {
-        get: function get() {
-            return select(this.el);
-        }
-    });
-
-    return o;
-};
-
-var base$2 = {
-    on: function on(model, attrName) {
-        var refresh = refreshFunction$1(this, model, attrName);
-
-        // DOM => model binding
-        this.sel.on('input', refresh).on('change', refresh);
-    },
-    off: function off() {
-        this.sel.on('input', null).on('change', null);
-    },
-    value: function value(_value) {
-        if (arguments.length) this.sel.property('value', _value);else return this.sel.property('value');
-    }
-};
-
-function createValueType$1(proto) {
-
-    function ValueType(el) {
-        sel$1(this).el = el;
-    }
-
-    ValueType.prototype = objectAssign({}, base$2, proto);
-
-    return ValueType;
-}
-
-function refreshFunction$1(vType, model, attrName) {
-
-    return viewDebounce(function () {
-        model.$set(attrName, vType.value());
-    });
-}
-
-var input$2 = createValueType$1();
-
-var checkbox$1 = createValueType$1({
-    value: function value(_value) {
-        if (arguments.length) this.sel.property('checked', _value);else return this.sel.property('checked');
-    }
-});
-
-var select$3 = createValueType$1({
-    value: function value(_value) {
-        var sel = this.sel,
-            options = sel.selectAll('option'),
-            values = _value,
-            opt;
-
-        if (arguments.length) {
-            if (!isArray(values)) values = [_value || ''];
-            options.each(function () {
-                opt = select(this);
-                _value = opt.attr('value') || '';
-                opt.property('selected', values.indexOf(_value) > -1);
-            });
-        } else {
-            values = [];
-            options.each(function () {
-                opt = select(this);
-                if (opt.property('selected')) values.push(opt.attr('value') || '');
-            });
-            if (sel.property('multiple')) return values;else return values[0] || '';
-        }
-    }
-});
-
-var types$1 = {
-    input: input$2,
-    textarea: input$2,
-    select: select$3,
-    checkbox: checkbox$1
-};
-
-//
-//  d3-value directive
-//  ===================
-//
-//  Two-way data binding for HTML elements supporting the value property
-var value$1 = {
-    create: function create(expression) {
-        var type = this.sel.attr('type'),
-            tag = this.el.tagName.toLowerCase(),
-            ValueType = types$1[type] || types$1[tag];
-
-        if (!ValueType) return warn$2('Cannot apply d3-value directive to ' + tag);
-        this.tag = new ValueType(this.el);
-        return expression;
-    },
-    mount: function mount(model) {
-        var expr = this.expression;
-        // TODO: relax this constraint
-        if (expr.parsed.type !== expr.codes.IDENTIFIER) return warn$2('d3-value expression support identifiers only, got "' + expr.parsed.type + '": ' + this.expression);
-        var attrName = this.expression.expr;
-        //
-        // Create the model reactive attribute
-        model.$set(attrName, this.tag.value());
-        // register dom event
-        this.tag.on(model, attrName);
-        return model;
-    },
-    refresh: function refresh(model, value) {
-        this.tag.value(value);
-    },
-    destroy: function destroy() {
-        this.tag.off();
-    }
-};
-
-//
-//  d3-on directive
-//
-//  A one-way data binding from dom events to model properties/methods
-//  Event listeners are on the DOM, not on the model
-var on$1 = {
-    mount: function mount(model) {
-        var eventName = this.arg || 'click',
-            expr = this.expression;
-
-        // DOM event => model binding
-        this.on(this.sel, eventName + '.' + this.uid, function (event) {
-            var md = model.$child();
-            md.$event = event;
-            expr.eval(md);
-        });
-
-        this.bindDestroy(model);
-        // Does not return the model so that model data binding is not performed
-    },
-    destroy: function destroy() {
-        var eventName = this.arg || 'click';
-        this.on(this.sel, eventName + '.' + this.uid, null);
-    }
-};
-
-// require handlebar
-function compile$3(text) {
-    var handlebars = inBrowser ? window.handlebars : require('handlebars');
-    if (handlebars) return handlebars.compile(text);
-    warn$2('compile function requires handlebars');
-}
-
-function html$3(source, context) {
-    if (isString(source)) {
-        if (context) {
-            var s = compile$3(source);
-            if (!s) return source;
-        } else return source;
-    }
-    return source(context);
-}
-
-function htmlElement$1(source, context) {
-    var el = select(document.createElement('div'));
-    el.html(html$3(source, context));
-    var children = el.node().children;
-    if (children.length !== 1) warn$2('HtmlElement function should return one root element only, got ' + children.length);
-    return children[0];
-}
-
-function HttpError$1(response) {
-    this.response = response;
-    this.description = response.statusText;
-}
-
-HttpError$1.prototype = Error.prototype;
-
-// a resolved promise
-var resolvedPromise$1 = function (result) {
-  return new Promise(function (resolve) {
-    resolve(result);
-  });
-};
-
-var asSelect$1 = function (el) {
-    if (el && !isFunction(el.size)) return select(el);
-    return el;
-};
-
-//
-//  Base d3-view Object
-//  =====================
-//
-var viewBase = {
-    // d3-view object
-    isd3: true,
-    //
-    providers: viewProviders,
-    //
-    // Create a view element, same as createElement but compile it
-    viewElement: htmlElement$1,
-    //
-    select: function select$$1(el) {
-        return select(el);
-    },
-
-    //
-    selectAll: function selectAll$$1(el) {
-        return selectAll(el);
-    },
-
-    //
-    createElement: function createElement(tag) {
-        return select(document.createElement(tag));
-    },
-
-    // Shortcut for fetch function in providers
-    fetch: function fetch(url, options) {
-        var fetch = viewProviders.fetch;
-        return arguments.length == 1 ? fetch(url) : fetch(url, options);
-    },
-
-    //
-    fetchText: function fetchText(url) {
-        for (var _len = arguments.length, x = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-            x[_key - 1] = arguments[_key];
-        }
-
-        return this.fetch.apply(this, [url].concat(x)).then(function (response) {
-            return response.text();
-        });
-    },
-
-    //
-    json: function json(url) {
-        for (var _len2 = arguments.length, x = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-            x[_key2 - 1] = arguments[_key2];
-        }
-
-        return this.fetch.apply(this, [url].concat(x)).then(jsonResponse$1);
-    },
-
-    //
-    // render a template from a url
-    renderFromUrl: function renderFromUrl(url, context) {
-        var asElement = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
-        var cache = this.cache;
-        if (url in cache) return resolvedPromise$1(asElement ? htmlElement$1(cache[url]) : cache[url]);
-        return this.fetchText(url).then(function (template) {
-            cache[url] = template;
-            return asElement ? htmlElement$1(template, context) : html$3(template, context);
-        });
-    },
-
-    //
-    on: function on(el, name, callback) {
-        el = asSelect$1(el);
-        if (callback === null) return el.on(name, null);else el.on(name, function () {
-            return callback(event);
-        });
-    }
-};
-
-function jsonResponse$1(response) {
-    if (response.status >= 300) throw new HttpError$1(response);
-    var ct = (response.headers.get('content-type') || '').split(';')[0];
-    if (ct === 'application/json') return response.json();else throw new Error('Expected JSON content type, got ' + ct);
-}
-
-// Code originally from https://github.com/soney/jsep
-// Copyright (c) 2013 Stephen Oney, http://jsep.from.so/
-// Code modified and adapted to work with d3-view
-
-// This is the full set of types that any JSEP node can be.
-// Store them here to save space when minified
-var code$1 = {
-    COMPOUND: 'Compound',
-    IDENTIFIER: 'Identifier',
-    MEMBER_EXP: 'MemberExpression',
-    LITERAL: 'Literal',
-    THIS_EXP: 'ThisExpression',
-    CALL_EXP: 'CallExpression',
-    UNARY_EXP: 'UnaryExpression',
-    BINARY_EXP: 'BinaryExpression',
-    LOGICAL_EXP: 'LogicalExpression',
-    CONDITIONAL_EXP: 'ConditionalExpression',
-    ARRAY_EXP: 'ArrayExpression'
-};
-
-var PERIOD_CODE$1 = 46;
-var COMMA_CODE$1 = 44;
-var SQUOTE_CODE$1 = 39;
-var DQUOTE_CODE$1 = 34;
-var OPAREN_CODE$1 = 40;
-var CPAREN_CODE$1 = 41;
-var OBRACK_CODE$1 = 91;
-var CBRACK_CODE$1 = 93;
-var QUMARK_CODE$1 = 63;
-var SEMCOL_CODE$1 = 59;
-var COLON_CODE$1 = 58;
-var throwError$1 = function throwError(message, index) {
-    var error = new Error(message + ' at character ' + index);
-    error.index = index;
-    error.description = message;
-    throw error;
-};
-var t$1 = true;
-var unary_ops$1 = { '-': t$1, '!': t$1, '~': t$1, '+': t$1 };
-var binary_ops$1 = {
-    '||': 1, '&&': 2, '|': 3, '^': 4, '&': 5,
-    '==': 6, '!=': 6, '===': 6, '!==': 6,
-    '<': 7, '>': 7, '<=': 7, '>=': 7,
-    '<<': 8, '>>': 8, '>>>': 8,
-    '+': 9, '-': 9,
-    '*': 10, '/': 10, '%': 10
-};
-var getMaxKeyLen$1 = function getMaxKeyLen(obj) {
-    var max_len = 0,
-        len;
-    for (var key in obj) {
-        if ((len = key.length) > max_len && obj.hasOwnProperty(key)) {
-            max_len = len;
-        }
-    }
-    return max_len;
-};
-var max_unop_len$1 = getMaxKeyLen$1(unary_ops$1);
-var max_binop_len$1 = getMaxKeyLen$1(binary_ops$1);
-var literals$1 = {
-    'true': true,
-    'false': false,
-    'null': null
-};
-var this_str$1 = 'this';
-var binaryPrecedence$1 = function binaryPrecedence(op_val) {
-    return binary_ops$1[op_val] || 0;
-};
-var createBinaryExpression$1 = function createBinaryExpression(operator, left, right) {
-    var type = operator === '||' || operator === '&&' ? code$1.LOGICAL_EXP : code$1.BINARY_EXP;
-    return {
-        type: type,
-        operator: operator,
-        left: left,
-        right: right
-    };
-};
-var isDecimalDigit$1 = function isDecimalDigit(ch) {
-    return ch >= 48 && ch <= 57; // 0...9
-};
-var isIdentifierStart$1 = function isIdentifierStart(ch) {
-    return ch === 36 || ch === 95 || // `$` and `_`
-    ch >= 65 && ch <= 90 || // A...Z
-    ch >= 97 && ch <= 122 || // a...z
-    ch >= 128 && !binary_ops$1[String.fromCharCode(ch)]; // any non-ASCII that is not an operator
-};
-var isIdentifierPart$1 = function isIdentifierPart(ch) {
-    return ch === 36 || ch === 95 || // `$` and `_`
-    ch >= 65 && ch <= 90 || // A...Z
-    ch >= 97 && ch <= 122 || // a...z
-    ch >= 48 && ch <= 57 || // 0...9
-    ch >= 128 && !binary_ops$1[String.fromCharCode(ch)]; // any non-ASCII that is not an operator
-};
-var jsep$2 = function jsep(expr) {
-    // `index` stores the character number we are currently at while `length` is a constant
-    // All of the gobbles below will modify `index` as we move along
-    var index = 0,
-        charAtFunc = expr.charAt,
-        charCodeAtFunc = expr.charCodeAt,
-        exprI = function exprI(i) {
-        return charAtFunc.call(expr, i);
-    },
-        exprICode = function exprICode(i) {
-        return charCodeAtFunc.call(expr, i);
-    },
-        length = expr.length,
-
-
-    // Push `index` up to the next non-space character
-    gobbleSpaces = function gobbleSpaces() {
-        var ch = exprICode(index);
-        // space or tab
-        while (ch === 32 || ch === 9) {
-            ch = exprICode(++index);
-        }
-    },
-
-
-    // The main parsing function. Much of this code is dedicated to ternary expressions
-    gobbleExpression = function gobbleExpression() {
-        var test = gobbleBinaryExpression(),
-            consequent,
-            alternate;
-        gobbleSpaces();
-        if (exprICode(index) === QUMARK_CODE$1) {
-            // Ternary expression: test ? consequent : alternate
-            index++;
-            consequent = gobbleExpression();
-            if (!consequent) {
-                throwError$1('Expected expression', index);
-            }
-            gobbleSpaces();
-            if (exprICode(index) === COLON_CODE$1) {
-                index++;
-                alternate = gobbleExpression();
-                if (!alternate) {
-                    throwError$1('Expected expression', index);
-                }
-                return {
-                    type: code$1.CONDITIONAL_EXP,
-                    test: test,
-                    consequent: consequent,
-                    alternate: alternate
-                };
-            } else {
-                throwError$1('Expected :', index);
-            }
-        } else {
-            return test;
-        }
-    },
-
-
-    // Search for the operation portion of the string (e.g. `+`, `===`)
-    // Start by taking the longest possible binary operations (3 characters: `===`, `!==`, `>>>`)
-    // and move down from 3 to 2 to 1 character until a matching binary operation is found
-    // then, return that binary operation
-    gobbleBinaryOp = function gobbleBinaryOp() {
-        gobbleSpaces();
-        var to_check = expr.substr(index, max_binop_len$1),
-            tc_len = to_check.length;
-        while (tc_len > 0) {
-            if (binary_ops$1.hasOwnProperty(to_check)) {
-                index += tc_len;
-                return to_check;
-            }
-            to_check = to_check.substr(0, --tc_len);
-        }
-        return false;
-    },
-
-
-    // This function is responsible for gobbling an individual expression,
-    // e.g. `1`, `1+2`, `a+(b*2)-Math.sqrt(2)`
-    gobbleBinaryExpression = function gobbleBinaryExpression() {
-        var node, biop, prec, stack, biop_info, left, right, i;
-
-        // First, try to get the leftmost thing
-        // Then, check to see if there's a binary operator operating on that leftmost thing
-        left = gobbleToken();
-        biop = gobbleBinaryOp();
-
-        // If there wasn't a binary operator, just return the leftmost node
-        if (!biop) {
-            return left;
-        }
-
-        // Otherwise, we need to start a stack to properly place the binary operations in their
-        // precedence structure
-        biop_info = { value: biop, prec: binaryPrecedence$1(biop) };
-
-        right = gobbleToken();
-        if (!right) {
-            throwError$1("Expected expression after " + biop, index);
-        }
-        stack = [left, biop_info, right];
-
-        // Properly deal with precedence using [recursive descent](http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm)
-        while (biop = gobbleBinaryOp()) {
-            prec = binaryPrecedence$1(biop);
-
-            if (prec === 0) {
-                break;
-            }
-            biop_info = { value: biop, prec: prec };
-
-            // Reduce: make a binary expression from the three topmost entries.
-            while (stack.length > 2 && prec <= stack[stack.length - 2].prec) {
-                right = stack.pop();
-                biop = stack.pop().value;
-                left = stack.pop();
-                node = createBinaryExpression$1(biop, left, right);
-                stack.push(node);
-            }
-
-            node = gobbleToken();
-            if (!node) {
-                throwError$1("Expected expression after " + biop, index);
-            }
-            stack.push(biop_info, node);
-        }
-
-        i = stack.length - 1;
-        node = stack[i];
-        while (i > 1) {
-            node = createBinaryExpression$1(stack[i - 1].value, stack[i - 2], node);
-            i -= 2;
-        }
-        return node;
-    },
-
-
-    // An individual part of a binary expression:
-    // e.g. `foo.bar(baz)`, `1`, `"abc"`, `(a % 2)` (because it's in parenthesis)
-    gobbleToken = function gobbleToken() {
-        var ch, to_check, tc_len;
-
-        gobbleSpaces();
-        ch = exprICode(index);
-
-        if (isDecimalDigit$1(ch) || ch === PERIOD_CODE$1) {
-            // Char code 46 is a dot `.` which can start off a numeric literal
-            return gobbleNumericLiteral();
-        } else if (ch === SQUOTE_CODE$1 || ch === DQUOTE_CODE$1) {
-            // Single or double quotes
-            return gobbleStringLiteral();
-        } else if (isIdentifierStart$1(ch) || ch === OPAREN_CODE$1) {
-            // open parenthesis
-            // `foo`, `bar.baz`
-            return gobbleVariable();
-        } else if (ch === OBRACK_CODE$1) {
-            return gobbleArray();
-        } else {
-            to_check = expr.substr(index, max_unop_len$1);
-            tc_len = to_check.length;
-            while (tc_len > 0) {
-                if (unary_ops$1.hasOwnProperty(to_check)) {
-                    index += tc_len;
-                    return {
-                        type: code$1.UNARY_EXP,
-                        operator: to_check,
-                        argument: gobbleToken(),
-                        prefix: true
-                    };
-                }
-                to_check = to_check.substr(0, --tc_len);
-            }
-
-            return false;
-        }
-    },
-
-    // Parse simple numeric literals: `12`, `3.4`, `.5`. Do this by using a string to
-    // keep track of everything in the numeric literal and then calling `parseFloat` on that string
-    gobbleNumericLiteral = function gobbleNumericLiteral() {
-        var number = '',
-            ch,
-            chCode;
-        while (isDecimalDigit$1(exprICode(index))) {
-            number += exprI(index++);
-        }
-
-        if (exprICode(index) === PERIOD_CODE$1) {
-            // can start with a decimal marker
-            number += exprI(index++);
-
-            while (isDecimalDigit$1(exprICode(index))) {
-                number += exprI(index++);
-            }
-        }
-
-        ch = exprI(index);
-        if (ch === 'e' || ch === 'E') {
-            // exponent marker
-            number += exprI(index++);
-            ch = exprI(index);
-            if (ch === '+' || ch === '-') {
-                // exponent sign
-                number += exprI(index++);
-            }
-            while (isDecimalDigit$1(exprICode(index))) {
-                //exponent itself
-                number += exprI(index++);
-            }
-            if (!isDecimalDigit$1(exprICode(index - 1))) {
-                throwError$1('Expected exponent (' + number + exprI(index) + ')', index);
-            }
-        }
-
-        chCode = exprICode(index);
-        // Check to make sure this isn't a variable name that start with a number (123abc)
-        if (isIdentifierStart$1(chCode)) {
-            throwError$1('Variable names cannot start with a number (' + number + exprI(index) + ')', index);
-        } else if (chCode === PERIOD_CODE$1) {
-            throwError$1('Unexpected period', index);
-        }
-
-        return {
-            type: code$1.LITERAL,
-            value: parseFloat(number),
-            raw: number
-        };
-    },
-
-
-    // Parses a string literal, staring with single or double quotes with basic support for escape codes
-    // e.g. `"hello world"`, `'this is\nJSEP'`
-    gobbleStringLiteral = function gobbleStringLiteral() {
-        var str = '',
-            quote = exprI(index++),
-            closed = false,
-            ch;
-
-        while (index < length) {
-            ch = exprI(index++);
-            if (ch === quote) {
-                closed = true;
-                break;
-            } else if (ch === '\\') {
-                // Check for all of the common escape codes
-                ch = exprI(index++);
-                switch (ch) {
-                    case 'n':
-                        str += '\n';break;
-                    case 'r':
-                        str += '\r';break;
-                    case 't':
-                        str += '\t';break;
-                    case 'b':
-                        str += '\b';break;
-                    case 'f':
-                        str += '\f';break;
-                    case 'v':
-                        str += '\x0B';break;
-                    default:
-                        str += '\\' + ch;
-                }
-            } else {
-                str += ch;
-            }
-        }
-
-        if (!closed) {
-            throwError$1('Unclosed quote after "' + str + '"', index);
-        }
-
-        return {
-            type: code$1.LITERAL,
-            value: str,
-            raw: quote + str + quote
-        };
-    },
-
-
-    // Gobbles only identifiers
-    // e.g.: `foo`, `_value`, `$x1`
-    // Also, this function checks if that identifier is a literal:
-    // (e.g. `true`, `false`, `null`) or `this`
-    gobbleIdentifier = function gobbleIdentifier() {
-        var ch = exprICode(index),
-            start = index,
-            identifier;
-
-        if (isIdentifierStart$1(ch)) {
-            index++;
-        } else {
-            throwError$1('Unexpected ' + exprI(index), index);
-        }
-
-        while (index < length) {
-            ch = exprICode(index);
-            if (isIdentifierPart$1(ch)) {
-                index++;
-            } else {
-                break;
-            }
-        }
-        identifier = expr.slice(start, index);
-
-        if (literals$1.hasOwnProperty(identifier)) {
-            return {
-                type: code$1.LITERAL,
-                value: literals$1[identifier],
-                raw: identifier
-            };
-        } else if (identifier === this_str$1) {
-            return { type: code$1.THIS_EXP };
-        } else {
-            return {
-                type: code$1.IDENTIFIER,
-                name: identifier
-            };
-        }
-    },
-
-
-    // Gobbles a list of arguments within the context of a function call
-    // or array literal. This function also assumes that the opening character
-    // `(` or `[` has already been gobbled, and gobbles expressions and commas
-    // until the terminator character `)` or `]` is encountered.
-    // e.g. `foo(bar, baz)`, `my_func()`, or `[bar, baz]`
-    gobbleArguments = function gobbleArguments(termination) {
-        var ch_i,
-            args = [],
-            node,
-            closed = false;
-        while (index < length) {
-            gobbleSpaces();
-            ch_i = exprICode(index);
-            if (ch_i === termination) {
-                // done parsing
-                closed = true;
-                index++;
-                break;
-            } else if (ch_i === COMMA_CODE$1) {
-                // between expressions
-                index++;
-            } else {
-                node = gobbleExpression();
-                if (!node || node.type === code$1.COMPOUND) {
-                    throwError$1('Expected comma', index);
-                }
-                args.push(node);
-            }
-        }
-        if (!closed) {
-            throwError$1('Expected ' + String.fromCharCode(termination), index);
-        }
-        return args;
-    },
-
-
-    // Gobble a non-literal variable name. This variable name may include properties
-    // e.g. `foo`, `bar.baz`, `foo['bar'].baz`
-    // It also gobbles function calls:
-    // e.g. `Math.acos(obj.angle)`
-    gobbleVariable = function gobbleVariable() {
-        var ch_i, node;
-        ch_i = exprICode(index);
-
-        if (ch_i === OPAREN_CODE$1) {
-            node = gobbleGroup();
-        } else {
-            node = gobbleIdentifier();
-        }
-        gobbleSpaces();
-        ch_i = exprICode(index);
-        while (ch_i === PERIOD_CODE$1 || ch_i === OBRACK_CODE$1 || ch_i === OPAREN_CODE$1) {
-            index++;
-            if (ch_i === PERIOD_CODE$1) {
-                gobbleSpaces();
-                node = {
-                    type: code$1.MEMBER_EXP,
-                    computed: false,
-                    object: node,
-                    property: gobbleIdentifier()
-                };
-            } else if (ch_i === OBRACK_CODE$1) {
-                node = {
-                    type: code$1.MEMBER_EXP,
-                    computed: true,
-                    object: node,
-                    property: gobbleExpression()
-                };
-                gobbleSpaces();
-                ch_i = exprICode(index);
-                if (ch_i !== CBRACK_CODE$1) {
-                    throwError$1('Unclosed [', index);
-                }
-                index++;
-            } else if (ch_i === OPAREN_CODE$1) {
-                // A function call is being made; gobble all the arguments
-                node = {
-                    type: code$1.CALL_EXP,
-                    'arguments': gobbleArguments(CPAREN_CODE$1),
-                    callee: node
-                };
-            }
-            gobbleSpaces();
-            ch_i = exprICode(index);
-        }
-        return node;
-    },
-
-
-    // Responsible for parsing a group of things within parentheses `()`
-    // This function assumes that it needs to gobble the opening parenthesis
-    // and then tries to gobble everything within that parenthesis, assuming
-    // that the next thing it should see is the close parenthesis. If not,
-    // then the expression probably doesn't have a `)`
-    gobbleGroup = function gobbleGroup() {
-        index++;
-        var node = gobbleExpression();
-        gobbleSpaces();
-        if (exprICode(index) === CPAREN_CODE$1) {
-            index++;
-            return node;
-        } else {
-            throwError$1('Unclosed (', index);
-        }
-    },
-
-
-    // Responsible for parsing Array literals `[1, 2, 3]`
-    // This function assumes that it needs to gobble the opening bracket
-    // and then tries to gobble the expressions as arguments.
-    gobbleArray = function gobbleArray() {
-        index++;
-        return {
-            type: code$1.ARRAY_EXP,
-            elements: gobbleArguments(CBRACK_CODE$1)
-        };
-    },
-        nodes = [],
-        ch_i,
-        node;
-
-    while (index < length) {
-        ch_i = exprICode(index);
-
-        // Expressions can be separated by semicolons, commas, or just inferred without any
-        // separators
-        if (ch_i === SEMCOL_CODE$1 || ch_i === COMMA_CODE$1) {
-            index++; // ignore separators
-        } else {
-            // Try to gobble each expression individually
-            if (node = gobbleExpression()) {
-                nodes.push(node);
-                // If we weren't able to find a binary expression and are out of room, then
-                // the expression passed in probably has too much
-            } else if (index < length) {
-                throwError$1('Unexpected "' + exprI(index) + '"', index);
-            }
-        }
-    }
-
-    // If there's only one expression just try returning the expression
-    if (nodes.length === 1) {
-        return nodes[0];
-    } else {
-        return {
-            type: code$1.COMPOUND,
-            body: nodes
-        };
-    }
-};
-
-/**
- * @method jsep.addUnaryOp
- * @param {string} op_name The name of the unary op to add
- * @return jsep
- */
-jsep$2.addUnaryOp = function (op_name) {
-    max_unop_len$1 = Math.max(op_name.length, max_unop_len$1);
-    unary_ops$1[op_name] = t$1;return this;
-};
-
-/**
- * @method jsep.addBinaryOp
- * @param {string} op_name The name of the binary op to add
- * @param {number} precedence The precedence of the binary op (can be a float)
- * @return jsep
- */
-jsep$2.addBinaryOp = function (op_name, precedence) {
-    max_binop_len$1 = Math.max(op_name.length, max_binop_len$1);
-    binary_ops$1[op_name] = precedence;
-    return this;
-};
-
-/**
- * @method jsep.addLiteral
- * @param {string} literal_name The name of the literal to add
- * @param {*} literal_value The value of the literal
- * @return jsep
- */
-jsep$2.addLiteral = function (literal_name, literal_value) {
-    literals$1[literal_name] = literal_value;
-    return this;
-};
-
-/**
- * @method jsep.removeUnaryOp
- * @param {string} op_name The name of the unary op to remove
- * @return jsep
- */
-jsep$2.removeUnaryOp = function (op_name) {
-    delete unary_ops$1[op_name];
-    if (op_name.length === max_unop_len$1) {
-        max_unop_len$1 = getMaxKeyLen$1(unary_ops$1);
-    }
-    return this;
-};
-
-/**
- * @method jsep.removeBinaryOp
- * @param {string} op_name The name of the binary op to remove
- * @return jsep
- */
-jsep$2.removeBinaryOp = function (op_name) {
-    delete binary_ops$1[op_name];
-    if (op_name.length === max_binop_len$1) {
-        max_binop_len$1 = getMaxKeyLen$1(binary_ops$1);
-    }
-    return this;
-};
-
-/**
- * @method jsep.removeLiteral
- * @param {string} literal_name The name of the literal to remove
- * @return jsep
- */
-jsep$2.removeLiteral = function (literal_name) {
-    delete literals$1[literal_name];
-    return this;
-};
-
-function evaluate$1(self, expr, nested) {
-    switch (expr.type) {
-        case code$1.IDENTIFIER:
-            return self[expr.name];
-        case code$1.LITERAL:
-            return nested ? self[expr.value] : expr.value;
-        case code$1.ARRAY_EXP:
-            return expr.elements.map(function (elem) {
-                return evaluate$1(self, elem);
-            });
-        case code$1.LOGICAL_EXP:
-        case code$1.BINARY_EXP:
-            return binaryExp$1(expr.operator, evaluate$1(self, expr.left), evaluate$1(self, expr.right));
-        case code$1.CALL_EXP:
-            return callExpression$1(self, expr.callee, expr.arguments);
-        case code$1.MEMBER_EXP:
-            return evaluate$1(evaluate$1(self, expr.object), expr.property, true);
-        case code$1.CONDITIONAL_EXP:
-            return evaluate$1(self, expr.test) ? evaluate$1(self, expr.consequent) : evaluate$1(self, expr.alternate);
-        case code$1.UNARY_EXP:
-            return unaryExp$1(expr.operator, evaluate$1(self, expr.argument));
-    }
-}
-
-// extract identifiers
-function identifiers$1(expr, all) {
-    if (arguments.length === 1) all = set();
-    switch (expr.type) {
-        case code$1.IDENTIFIER:
-            all.add(expr.name);break;
-        case code$1.ARRAY_EXP:
-            expr.elements.forEach(function (elem) {
-                return identifiers$1(elem, all);
-            });
-            break;
-        case code$1.BINARY_EXP:
-            identifiers$1(expr.left, all);
-            identifiers$1(expr.right, all);
-            break;
-        case code$1.CALL_EXP:
-            identifiers$1(expr.callee, all);
-            expr.arguments.forEach(function (elem) {
-                return identifiers$1(elem, all);
-            });
-            break;
-        case code$1.MEMBER_EXP:
-            all.add(fullName$1(expr));
-            break;
-        case code$1.CONDITIONAL_EXP:
-            identifiers$1(expr.test, all);
-            identifiers$1(expr.consequent, all);
-            evaluate$1(expr.alternate, all);
-            break;
-        case code$1.UNARY_EXP:
-            identifiers$1(expr.argument, all);
-            break;
-    }
-    return all;
-}
-
-function callExpression$1(self, callee, args) {
-    var func;
-
-    args = args.map(function (arg) {
-        return evaluate$1(self, arg);
-    });
-
-    if (callee.type !== code$1.IDENTIFIER) {
-        self = evaluate$1(self, callee.object);
-        callee = callee.property;
-    }
-
-    func = self[callee.name];
-    if (!func) throw new EvalError('callable "' + callee.name + '" not found in context');
-    return func.apply(self, args);
-}
-
-function unaryExp$1(op, arg) {
-    if (!unaryFunctions$1[op]) unaryFunctions$1[op] = new Function("arg", 'return ' + op + ' arg');
-    return unaryFunctions$1[op](arg);
-}
-
-function binaryExp$1(op, a, b) {
-    if (!binaryFunctions$1[op]) binaryFunctions$1[op] = new Function("a", "b", 'return a ' + op + ' b');
-    return binaryFunctions$1[op](a, b);
-}
-
-function fullName$1(expr) {
-    if (expr.type === code$1.IDENTIFIER) return expr.name;else return fullName$1(expr.object) + '.' + expr.property.name;
-}
-
-var unaryFunctions$1 = {};
-var binaryFunctions$1 = {};
-
-// tiny javascript expression parser
-var proto$2 = {
-
-    eval: function _eval(model) {
-        return evaluate$1(model, this.parsed);
-    },
-
-    safeEval: function safeEval(model) {
-        try {
-            return evaluate$1(model, this.parsed);
-        } catch (msg) {
-            warn$2('Could not evaluate <<' + this.expr + '>> expression: ' + msg);
-        }
-    },
-
-    // evaluate identifiers from a model
-    identifiers: function identifiers$$1() {
-        return identifiers$1(this.parsed).values();
-    }
-};
-
-function Expression$1(expr) {
-    this.codes = code$1;
-    this.expr = expr;
-    this.parsed = jsep$2(expr);
-}
-
-Expression$1.prototype = proto$2;
-
-var viewExpression$1 = function (expr) {
-    return new Expression$1(expr);
-};
-
-var UID$1 = 0;
-var prefix$8 = 'd3v';
-
-// Add a unique identifier to an object
-var uid$1 = function (o) {
-    var uid = prefix$8 + ++UID$1;
-
-    if (arguments.length) {
-        Object.defineProperty(o, 'uid', {
-            get: function get() {
-                return uid;
-            }
-        });
-
-        return o;
-    } else return uid;
-};
-
-var ddispatch$1 = function () {
-    var events = dispatch('change'),
-        _triggered = 0;
-
-    return {
-        on: function on(typename, callback) {
-            if (arguments.length < 2) return events.on(typename);
-            events.on(typename, callback);
-            return this;
-        },
-
-        trigger: viewDebounce(function () {
-            events.apply('change', this, arguments);
-            _triggered += 1;
-        }),
-        triggered: function triggered() {
-            return _triggered;
-        }
-    };
-};
-
-//
-// Initialise a model
-function asModel$1(model, initials) {
-    var events = map(),
-        Child = null;
-
-    // event handler for any change in the model
-    events.set('', ddispatch$1());
-
-    Object.defineProperties(uid$1(model), {
-        $events: {
-            get: function get() {
-                return events;
-            }
-        }
-    });
-    model.$child = $child;
-    model.$update(initials);
-
-    function $child(o) {
-        if (Child === null) Child = createChildConstructor$1(model);
-        return new Child(o);
-    }
-}
-
-function createChildConstructor$1(model) {
-
-    function Child(initials) {
-        asModel$1(this, initials);
-        Object.defineProperties(this, {
-            parent: {
-                get: function get() {
-                    return model;
-                }
-            },
-            isolated: {
-                get: function get() {
-                    return false;
-                }
-            }
-        });
-    }
-
-    Child.prototype = model;
-    return Child;
-}
-
-var modelStr$1 = "[object d3Model]";
-
-var string$1 = function () {
-    return modelStr$1;
-};
-
-// Check if a value is a vanilla javascript object
-var isVanillaObject$1 = function (value) {
-    return value && value.constructor === Object;
-};
-
-//  $set a reactive attribute for a Model
-//
-//  Set the value of an attribute in the model
-//  If the attribute is not already reactive make it as such.
-//
-var $set$1 = function (key, value) {
-    // property not reactive - make it as such
-    if (!this.$events.get(key)) reactive$1(this, key, value);else this[key] = value;
-};
-
-function isModel$1(value) {
-    return isObject(value) && value.toString() === '[object d3Model]';
-}
-
-function reactive$1(model, key, value) {
-    var lazy;
-
-    model.$events.set(key, ddispatch$1());
-
-    Object.defineProperty(model, key, property());
-
-    // Create a new model if value is an object
-    value = typeValue(value);
-    // Trigger the callback once for initialization
-    model.$change(key);
-
-    function update(newValue) {
-        if (lazy) newValue = lazy.get.call(model);
-        if (newValue === value) return;
-        // trigger lazy callbacks
-        var oldValue = value;
-        value = typeValue(newValue, oldValue);
-        //
-        // Fire model events
-        var modelName = model.name || 'model';
-        viewDebug('updating ' + modelName + '.' + key);
-        model.$change(key, oldValue); // attribute change event
-        model.$change(); // model change event
-    }
-
-    function property() {
-        var prop = {
-            get: function get() {
-                return value;
-            }
-        };
-
-        if (isFunction(value)) value = { get: value };
-
-        // calculated attribute
-        if (isVanillaObject$1(value) && isFunction(value.get)) {
-            lazy = value;
-            value = lazy.get.call(model);
-
-            if (lazy.reactOn) lazy.reactOn.forEach(function (name) {
-                model.$on(name + '.' + key, update);
-            });else warn$2('reactive lazy property ' + key + ' does not specify \'reactOn\' list or properties');
-
-            if (isFunction(lazy.set)) prop.set = lazy.set;
-        } else prop.set = update;
-
-        return prop;
-    }
-
-    function typeValue(newValue, oldValue) {
-        if (newValue === oldValue) return oldValue;else if (isArray(newValue)) return arrayValue(newValue, oldValue);else if (isModel$1(oldValue)) return modelValue(newValue, oldValue);else return isVanillaObject$1(newValue) ? model.$new(newValue) : newValue;
-    }
-
-    function arrayValue(newValue, oldValue) {
-        if (isModel$1(oldValue)) oldValue.$off();
-        if (!isArray(oldValue)) oldValue = [];
-        for (var i = 0; i < newValue.length; ++i) {
-            newValue[i] = typeValue(newValue[i], oldValue[i]);
-        }return newValue;
-    }
-
-    function modelValue(newValue, oldValue) {
-        if (isVanillaObject$1(newValue)) {
-            oldValue.$update(newValue);
-            return oldValue;
-        } else {
-            oldValue.$off();
-            return typeValue(newValue);
-        }
-    }
-}
-
-// Add change callback to a model reactive attribute
-var $on$1 = function (name, callback) {
-
-    // When no name is provided, whait for changes on this model - no its parents
-    if (arguments.length === 1 && isFunction(name)) {
-        callback = name;
-        name = '';
-    }
-
-    var bits = name.split('.'),
-        key = bits[0],
-        event = getEvent$1(this, key);
-
-    if (!event) return warn$2('Cannot bind to "' + key + '" - no such reactive property');
-
-    // event from a parent model, add model uid to distinguish it from other child callbacks
-    if (!this.$events.get(key)) bits.push(this.uid);
-
-    bits[0] = 'change';
-    return event.on(bits.join('.'), callback);
-};
-
-function getEvent$1(model, name) {
-    var event = model.$events.get(name);
-    if (!event && model.parent) return getEvent$1(model.parent, name);
-    return event;
-}
-
-// Update a model with reactive model data
-var $update$1 = function (data, replace) {
-    if (data) {
-        replace = arguments.length === 2 ? replace : true;
-        for (var key in data) {
-            if (replace || this[key] === undefined) {
-                if (key.substring(0, 1) === '$') {
-                    if (this.constructor.prototype[key]) warn$2('Cannot set attribute method ' + key + ', it is protected');else this[key] = data[key];
-                } else this.$set(key, data[key]);
-            }
-        }
-    }
-    return this;
-};
-
-// remove event handlers
-var $off$1 = function (attr) {
-    if (attr === undefined) this.$events.each(function (event) {
-        return removeEvent$1(event);
-    });else {
-        var bits = attr.split('.'),
-            type = bits.splice(0, 1)[0],
-            event = this.$events.get(type);
-        if (event) removeEvent$1(event, bits.join('.'));
-    }
-};
-
-function removeEvent$1(event, name) {
-    if (name) event.on('change.' + name, null);else event.on('change', null);
-}
-
-// trigger change event on a model reactive attribute
-var $change$1 = function (attribute) {
-    var name = arguments.length ? attribute : '',
-        event = this.$events.get(name),
-        args = slice$2(arguments, 1);
-    if (event) event.trigger.apply(this, args);else warn$2('attribute \'' + name + '\' is not a reactive property this model');
-    return this;
-};
-
-//
-//check if an attribute is a reactive attribute for the model (or its prototypical parent)
-var $isreactive$1 = function (attr) {
-    if (!this.$events.has(attr)) {
-        if (!this.parent || this.isolated) return false;
-        return this.parent.$isReactive(attr);
-    }
-    return true;
-};
-
-//
-//  Model class
-//
-//  The model is at the core of d3-view reactive data component
-function Model$1(initials) {
-    asModel$1(this, initials);
-}
-
-function model$2(initials) {
-    return new Model$1(initials);
-}
-
-model$2.prototype = Model$1.prototype;
-
-// Public API methods
-Model$1.prototype.toString = string$1;
-Model$1.prototype.$on = $on$1;
-Model$1.prototype.$change = $change$1;
-Model$1.prototype.$update = $update$1;
-Model$1.prototype.$set = $set$1;
-Model$1.prototype.$new = $new$1;
-Model$1.prototype.$off = $off$1;
-Model$1.prototype.$isReactive = $isreactive$1;
-Object.defineProperty(Model$1.prototype, 'root', {
-    get: function get() {
-        return this.parent ? this.parent.root : this;
-    }
-});
-
-function $new$1(initials) {
-
-    var parent = this,
-        child = model$2(initials);
-
-    Object.defineProperties(child, {
-        parent: {
-            get: function get() {
-                return parent;
-            }
-        },
-        isolated: {
-            get: function get() {
-                return true;
-            }
-        }
-    });
-
-    return child;
-}
-
-//
-// Directive Prototype
-//
-// Directives are special attributes with the d3- prefix.
-// Directive attribute values are expected to be binding expressions.
-// A directive’s job is to reactively apply special behavior to the DOM
-// when the value of its expression changes.
-//
-// A directive can implement one or more of the directive methods:
-//
-//  * create
-//  * mount
-//  * refresh
-//  * destroy
-//
-var prototype$1 = objectAssign({}, viewBase, {
-    priority: 1,
-
-    // hooks
-    create: function create(expression) {
-        return expression;
-    },
-
-
-    // pre mount
-    preMount: function preMount() {},
-    mount: function mount(model) {
-        return model;
-    },
-    refresh: function refresh() {},
-    destroy: function destroy() {},
-    removeAttribute: function removeAttribute() {
-        this.el.removeAttribute(this.name);
-    },
-
-
-    // Execute directive
-    execute: function execute(model) {
-        if (!this.active) return;
-        this.removeAttribute();
-        this.identifiers = [];
-        model = this.mount(model);
-        // If model returned, bind the element to its properties
-        if (model) this.bindModel(model);
-    },
-    bindModel: function bindModel(model) {
-        var dir = this,
-            refresh = function refresh() {
-            var value = dir.expression ? dir.expression.eval(model) : undefined;
-            dir.refresh(model, value);
-        };
-
-        // Bind expression identifiers with model
-        var bits = void 0,
-            target = void 0,
-            attr = void 0,
-            i = void 0;
-        if (!this.expression) {
-            dir.identifiers.push({
-                model: model,
-                attr: ''
-            });
-        } else {
-            var modelEvents = map();
-            this.expression.identifiers().forEach(function (identifier) {
-                bits = identifier.split('.');
-                target = model;
-                attr = null;
-
-                for (i = 0; i < bits.length - 1; ++i) {
-                    target = target[bits[i]];
-                    if (!isObject(target)) {
-                        attr = bits.slice(0, i + 1).join('.');
-                        warn$2('Property ' + attr + ' is not an object. Directive ' + dir.name + ' cannot bind to ' + identifier);
-                        break;
-                    }
-                }
-
-                // process attribute
-                if (attr === null) {
-                    if (!(target instanceof model$2)) return warn$2(identifier + ' is not a reactive model. Directive ' + dir.name + ' cannot bind to it');
-                    addTarget$1(modelEvents, target, bits[bits.length - 1]);
-                }
-            });
-
-            modelEvents.each(function (target) {
-                if (target.events.has('')) dir.identifiers.push({
-                    model: target.model,
-                    attr: ''
-                });else target.events.each(function (attr) {
-                    dir.identifiers.push({
-                        model: target.model,
-                        attr: attr
-                    });
-                });
-            });
-        }
-
-        this.identifiers.forEach(function (identifier) {
-            var event = identifier.attr + '.' + dir.uid;
-            identifier.model.$on(event, refresh);
-        });
-
-        this.bindDestroy(model);
-
-        refresh();
-    },
-    bindDestroy: function bindDestroy(model) {
-        var _this = this;
-
-        var dir = this,
-            destroy = this.destroy;
-        // bind destroy to the model
-        dir.destroy = function () {
-            return destroy.call(dir, model);
-        };
-
-        this.sel.on('remove.' + dir.uid, function () {
-            _this.identifiers.forEach(function (identifier) {
-                identifier.model.$off(identifier.attr + '.' + dir.uid);
-            });
-            dir.destroy();
-        });
-    }
-});
-
-// Directive constructor
-var createDirective$1 = function (obj) {
-
-    function Directive(el, attr, arg) {
-        this.el = el;
-        this.name = attr.name;
-        this.arg = arg;
-        var expr = sel$1(uid$1(this)).create(attr.value);
-        if (expr) this.expression = viewExpression$1(expr);
-        if (!this.active) this.active = !attr.value || this.expression;
-    }
-
-    Directive.prototype = objectAssign({}, prototype$1, obj);
-
-    function directive(el, attr, arg) {
-        return new Directive(el, attr, arg);
-    }
-
-    directive.prototype = Directive.prototype;
-    return directive;
-};
-
-function addTarget$1(modelEvents, model, attr) {
-    var target = modelEvents.get(model.uid),
-        value = arguments.length === 3 ? model[attr] : undefined;
-
-    if (!target) {
-        target = {
-            model: model,
-            events: set()
-        };
-        modelEvents.set(model.uid, target);
-    }
-    //
-    // a method of the model, event is at model level
-    if (isFunction(value) || arguments.length === 2) target.events.add('');
-    // value is another model, events at both target model level and value model level
-    else if (value instanceof model$2) {
-            target.events.add('');
-            addTarget$1(modelEvents, value);
-        } else {
-            // make sure attr is a reactive property of model
-            if (!model.$isReactive(attr)) model.$set(attr, model[attr]);
-            target.events.add(attr);
-        }
-}
-
-var maybeJson$1 = function (value) {
-    if (isString(value)) {
-        try {
-            return JSON.parse(value);
-        } catch (msg) {
-            return value;
-        }
-    }
-    return value;
-};
-
-var viewEvents$1 = dispatch('message', 'component-created', 'component-mount', 'component-mounted');
-
-// prototype for both views and components
-var protoComponent$1 = objectAssign({}, viewBase, {
-    //
-    // hooks
-    render: function render() {},
-    childrenMounted: function childrenMounted() {},
-    mounted: function mounted() {},
-    destroy: function destroy() {},
-
-    //
-    // Mount the component into an element
-    // If this component is already mounted, or it is mounting, it does nothing
-    mount: function mount(el, data, onMounted) {
-        var _this = this;
-
-        if (mounted$1(this)) warn$2('already mounted');else {
-            viewEvents$1.call('component-mount', undefined, this, el, data);
-            var sel = this.select(el),
-                directives = sel.directives(),
-                dattrs = directives ? directives.attrs : attributes$2(el),
-                model = this.model;
-            var key = void 0,
-                value = void 0,
-                target = void 0;
-
-            data = objectAssign({}, sel.datum(), data);
-
-            // override model keys from data object and element attributes
-            for (key in model) {
-                target = data[key] === undefined ? dattrs : data;
-                if (target[key] !== undefined) model[key] = maybeJson$1(pop(target, key));
-            }
-
-            // Create model
-            this.model = model = this.parent.model.$child(model);
-
-            if (isArray(this.props)) {
-                this.props.forEach(function (prop) {
-                    value = maybeJson$1(data[prop] === undefined ? dattrs[prop] : data[prop]);
-                    if (value !== undefined) {
-                        // data point to a model attribute
-                        if (isString(value) && model[value]) value = model[value];
-                        data[prop] = value;
-                    }
-                });
-            }
-            // give the model a name
-            if (!model.name) model.name = this.name;
-            //
-            // create the new element from the render function
-            var newEl = this.render(data, dattrs, el);
-            if (!newEl.then) newEl = resolvedPromise$1(newEl);
-            return newEl.then(function (element) {
-                return compile$2(_this, el, element, onMounted);
-            });
-        }
-    },
-
-    //
-    //  Mount an inner html into an element
-    //  This function should be used with the view element as first parameter
-    mountInner: function mountInner(sel, inner) {
-        var el = sel.node();
-        sel.html(inner);
-        if (el.childNodes.length) {
-            var children = slice$2(el.childNodes);
-            var p = sel.view(this).selectAll(function () {
-                return children;
-            }).mount();
-            return p ? p.then(function () {
-                return sel;
-            }) : sel;
-        } else {
-            return sel;
-        }
-    }
-});
-
-// factory of View and Component constructors
-function createComponent$1(name, o, prototype, coreDirectives) {
-    if (isFunction(o)) o = { render: o };
-
-    var obj = objectAssign({}, o),
-        classComponents = extendComponents$1(map(), pop(obj, 'components')),
-        classDirectives = extendDirectives$1(map(), pop(obj, 'directives')),
-        model = pop(obj, 'model'),
-        props = pop(obj, 'props');
-
-    function Component(options) {
-        var parent = pop(options, 'parent'),
-            components = map(parent ? parent.components : null),
-            directives = map(parent ? parent.directives : coreDirectives),
-            events = dispatch('message', 'mounted'),
-            cache = {};
-
-        classComponents.each(function (comp, key) {
-            components.set(key, comp);
-        });
-        classDirectives.each(function (comp, key) {
-            directives.set(key, comp);
-        });
-        extendComponents$1(components, pop(options, 'components'));
-        extendDirectives$1(directives, pop(options, 'directives'));
-
-        Object.defineProperties(this, {
-            name: {
-                get: function get() {
-                    return name;
-                }
-            },
-            components: {
-                get: function get() {
-                    return components;
-                }
-            },
-            directives: {
-                get: function get() {
-                    return directives;
-                }
-            },
-            parent: {
-                get: function get() {
-                    return parent;
-                }
-            },
-            root: {
-                get: function get() {
-                    return parent ? parent.root : this;
-                }
-            },
-            cache: {
-                get: function get() {
-                    return parent ? parent.cache : cache;
-                }
-            },
-            props: {
-                get: function get() {
-                    return props;
-                }
-            },
-            uid: {
-                get: function get() {
-                    return this.model.uid;
-                }
-            },
-            events: {
-                get: function get() {
-                    return events;
-                }
-            }
-        });
-        this.model = objectAssign({}, isFunction(model) ? model() : model, pop(options, 'model'));
-        viewEvents$1.call('component-created', undefined, this);
-    }
-
-    Component.prototype = objectAssign({}, prototype, obj);
-
-    function component(options) {
-        return new Component(options);
-    }
-
-    component.prototype = Component.prototype;
-
-    return component;
-}
-
-// Used by both Component and view
-
-function extendComponents$1(container, components) {
-    map(components).each(function (obj, key) {
-        container.set(key, createComponent$1(key, obj, protoComponent$1));
-    });
-    return container;
-}
-
-function extendDirectives$1(container, directives) {
-    map(directives).each(function (obj, key) {
-        container.set(key, createDirective$1(obj));
-    });
-    return container;
-}
-
-// Finalise the binding between the view and the model
-// inject the model into the view element
-// call the mounted hook and can return a Promise
-function asView$1(vm, element, onMounted) {
-    Object.defineProperty(sel$1(vm), 'el', {
-        get: function get() {
-            return element;
-        }
-    });
-    // Apply model to element and mount
-    return vm.select(element).view(vm).mount(null, onMounted).then(function () {
-        return vmMounted$1(vm, onMounted);
-    });
-}
-
-function mounted$1(vm, onMounted) {
-    if (vm.isMounted === undefined) {
-        vm.isMounted = false;
-        return false;
-    } else if (vm.isMounted) {
-        warn$2('view ' + vm.name + ' already mounted');
-    } else {
-        vm.isMounted = true;
-        // invoke mounted component hook
-        vm.mounted();
-        // invoke onMounted callback if available
-        if (onMounted) onMounted(vm);
-        // last invoke the view mounted events
-        vm.events.call('mounted', undefined, vm, onMounted);
-        // remove mounted events
-        vm.events.on('mounted', null);
-        // fire global event
-        viewEvents$1.call('component-mounted', undefined, vm);
-    }
-    return true;
-}
-
-// Internals
-
-//
-//  Component/View mounted
-//  =========================
-//
-//  This function is called when a component/view has all its children added
-function vmMounted$1(vm, onMounted) {
-    var parent = vm.parent;
-    vm.childrenMounted();
-    if (parent && !parent.isMounted) {
-        parent.events.on('mounted.' + vm.uid, function () {
-            mounted$1(vm, onMounted);
-        });
-    } else {
-        mounted$1(vm, onMounted);
-    }
-}
-
-// Compile a component model
-// This function is called once a component has rendered the component element
-function compile$2(cm, el, element, onMounted) {
-    if (!element) return warn$2('render function must return a single HTML node. It returned nothing!');
-    element = asSelect$1(element);
-    if (element.size() !== 1) warn$2('render function must return a single HTML node');
-    element = element.node();
-    //
-    // Insert before the component element
-    el.parentNode.insertBefore(element, el);
-    // remove the component element
-    cm.select(el).remove();
-    //
-    return asView$1(cm, element, onMounted);
-}
-
-function attributes$2(element) {
-    var attrs = {};
-    var attr = void 0;
-    for (var i = 0; i < element.attributes.length; ++i) {
-        attr = element.attributes[i];
-        attrs[attr.name] = attr.value;
-    }
-    return attrs;
-}
-
-// No value, it has its own directive
-var attributes$3 = ['name', 'class', 'disabled', 'readonly', 'required', 'href'];
-
-var getdirs$1 = function (element, directives) {
-    var sel = select(element),
-        dirs = sel.directives();
-    if (dirs) return dirs;
-    dirs = new Directives$1();
-
-    if (!directives) return dirs;
-
-    for (var i = 0; i < element.attributes.length; ++i) {
-        var attr = element.attributes[i],
-            bits = attr.name.split('-'),
-            dirName = bits[0] === 'd3' ? bits[1] : null,
-            arg = void 0;
-
-        if (dirName) {
-            arg = bits.slice(2).join('-');
-            if (!arg && attributes$3.indexOf(dirName) > -1) {
-                arg = dirName;
-                dirName = 'attr';
-            }
-            var directive = directives.get(dirName);
-            if (directive) dirs.add(directive(element, attr, arg));else warn$2(element.tagName + ' cannot find directive "' + dirName + '". Did you forget to register it?');
-        }
-        dirs.attrs[attr.name] = attr.value;
-    }
-
-    if (dirs.size()) sel.directives(dirs);
-    return dirs;
-};
-
-// Directives container
-function Directives$1() {
-    this.attrs = {};
-    this.all = [];
-}
-
-Directives$1.prototype = {
-    size: function size() {
-        return this.all.length;
-    },
-
-
-    pop: function pop(dir) {
-        var index = this.all.indexOf(dir);
-        if (index > -1) {
-            dir.removeAttribute();
-            this.all.splice(index, 1);
-        }
-        return dir;
-    },
-
-    add: function add(dir) {
-        this.all.push(dir);
-    },
-    forEach: function forEach(callback) {
-        this.all.forEach(callback);
-    },
-    preMount: function preMount() {
-        var dir = void 0;
-        for (var i = 0; i < this.all.length; ++i) {
-            dir = this.all[i];
-            if (dir.preMount()) return this.pop(dir);
-        }
-    },
-    execute: function execute(model) {
-        if (!this.size()) return;
-        return Promise.all(this.all.map(function (d) {
-            return d.execute(model);
-        }));
-    }
-};
-
-// Extend selection prototype with new methods
-selection.prototype.mount = mount$2;
-selection.prototype.view = view$2;
-selection.prototype.model = model$3;
-selection.prototype.directives = directives$3;
-
-function directives$3(value) {
-    return arguments.length ? this.property("__d3_directives__", value) : this.node().__d3_directives__;
-}
-
-function model$3() {
-    var vm = this.view();
-    return vm ? vm.model : null;
-}
-
-function view$2(value) {
-    if (arguments.length) {
-        return this.property("__d3_view__", value);
-    } else {
-        var element = this.node(),
-            view = element.__d3_view__,
-            parent = element.parentNode;
-
-        while (parent && !view) {
-            view = parent.__d3_view__;
-            parent = parent.parentNode;
-        }
-        return view;
-    }
-}
-
-//
-// mount function on a d3 selection
-// Use this function to mount the selection
-// THis method returns nothing or a promise
-function mount$2(data, onMounted) {
-    var promises = [];
-    this.each(function () {
-        var view = select(this).view();
-        if (view) promises.push(mountElement$1(this, view, data, onMounted));else warn$2('Cannot mount, no view object available to mount to');
-    });
-    return Promise.all(promises);
-}
-
-// mount an element into a given model
-function mountElement$1(element, vm, data, onMounted) {
-    if (!element || !element.tagName) return;
-
-    var component = vm.components.get(element.tagName.toLowerCase()),
-        directives = getdirs$1(element, vm.directives),
-        preMount = directives.preMount();
-
-    if (preMount) return preMount.execute(vm.model);else {
-        var promises = void 0;
-        if (component) promises = [component({ parent: vm }).mount(element, data, onMounted)];else promises = slice$2(element.children).map(function (c) {
-            return mountElement$1(c, vm, data, onMounted);
-        });
-
-        return Promise.all(promises).then(function () {
-            return directives.execute(vm.model);
-        });
-    }
-}
-
-//
-// prototype for views
-var protoView$1 = objectAssign({}, protoComponent$1, {
-
-    use: function use(plugin) {
-        if (isObject(plugin)) plugin.install(this);else plugin(this);
-        return this;
-    },
-
-    addComponent: function addComponent(name, obj) {
-        var component = createComponent$1(name, obj, protoComponent$1);
-        this.components.set(name, component);
-        return component;
-    },
-
-    addDirective: function addDirective(name, obj) {
-        var directive = createDirective$1(obj);
-        this.directives.set(name, directive);
-        return directive;
-    },
-
-    mount: function mount(el, callback) {
-        if (mounted$1(this)) warn$2('already mounted');else {
-            viewEvents$1.call('component-mount', undefined, this, el);
-            el = element$3(el);
-            if (el) {
-                this.model = this.parent ? this.parent.model.$child(this.model) : model$2(this.model);
-                return asView$1(this, el, callback);
-            }
-        }
-    }
-});
-
-function element$3(el) {
-    if (!el) return warn$2('element not defined, pass an identifier or an HTMLElement object');
-    var d3el = isFunction(el.node) ? el : select(el),
-        element = d3el.node();
-    if (!element) warn$2('could not find ' + el + ' element');else return element;
-}
-
-var forView$1 = createComponent$1('forView', null, protoView$1);
-
-//
-//  d3-for directive
-//  ======================
-//
-//  Repeat a element over an array of items and establish
-//  a one way binding between the array and the Dom
-var d3For$1 = {
-    create: function create(expression) {
-        var bits = [];
-        expression.trim().split(' ').forEach(function (v) {
-            v ? bits.push(v) : null;
-        });
-        if (bits.length !== 3 || bits[1] != 'in') return warn$2('d3-for directive requires "item in expression" template, got "' + expression + '"');
-        this.itemName = bits[0];
-        this.itemClass = 'for' + this.uid;
-        return bits[2];
-    },
-    preMount: function preMount() {
-        return true;
-    },
-    mount: function mount(model) {
-        this.creator = this.el;
-        this.el = this.creator.parentNode;
-        // remove the creator from the DOM
-        select(this.creator).remove();
-        if (this.el) return model;
-    },
-    refresh: function refresh(model, items) {
-        if (!isArray(items)) return;
-
-        var creator = this.creator,
-            selector = creator.tagName + '.' + this.itemClass,
-            itemName = this.itemName,
-            sel = this.sel,
-            entries = sel.selectAll(selector).data(items),
-            vm = sel.view();
-
-        var x = void 0;
-
-        entries.exit().remove();
-
-        entries.enter().append(function () {
-            return creator.cloneNode(true);
-        }).classed(this.itemClass, true).each(function (d, index) {
-            x = { index: index };
-            x[itemName] = d;
-            forView$1({
-                model: x,
-                parent: vm
-            }).mount(this, function (vm) {
-                // replace the item with a property from the model
-                // This allow for reactivity when d is an object
-                items[index] = vm.model[itemName];
-            });
-        }).merge(entries).each(function (d) {
-            // update model itemName property
-            this.__d3_view__.model[itemName] = d;
-        });
-    }
-};
-
-//
-//  d3-if
-//  =============
-//
-//  Show or hide an element
-//
-var d3If$1 = {
-    mount: function mount(model) {
-        this.display = this.sel.style('display');
-        if (!this.display || this.display === 'none') this.display = 'block';
-        return model;
-    },
-    refresh: function refresh(model, value) {
-        if (value) this.sel.style('display', this.display);else this.sel.style('display', 'none');
-    }
-};
-
-var directives$2 = {
-    attr: attr$1,
-    html: html$2,
-    value: value$1,
-    on: on$1,
-    'for': d3For$1,
-    'if': d3If$1
-};
-
-if (inBrowser) {
-    // DOM observer
-    // Check for changes in the DOM that leads to visual actions
-    var observer$1 = new MutationObserver(visualManager$1);
-    observer$1.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-    });
-}
-
-//
-//  Clears visualisation going out of scope
-function visualManager$1(records) {
-    records.forEach(function (record) {
-        var nodes = record.removedNodes;
-        var sel = void 0;
-        if (!nodes || !nodes.length) return; // phantomJs hack
-        nodes.forEach(function (node) {
-            if (node.nodeName !== '#text') {
-                sel = select(node);
-                if (sel.view()) {
-                    sel.selectAll('*').each(destroy$1);
-                    destroy$1.call(node);
-                }
-            }
-        });
-    });
-}
-
-function destroy$1() {
-    var dirs = this.__d3_directives__,
-        view = this.__d3_view__;
-    if (dirs) {
-        dirs.all.forEach(function (d) {
-            return d.destroy();
-        });
-        delete this.__d3_directives__;
-    }
-    if (view) {
-        view.destroy();
-        delete this.__d3_view__;
-    }
-}
-
-// Core Directives
-var coreDirectives$1 = extendDirectives$1(map(), directives$2);
-
-// the view constructor
-createComponent$1('view', null, protoView$1, coreDirectives$1);
-
-var providers$2 = {
-    logger: logger
-};
-
-var prefix$9 = '[d3-form]';
-
-var warn$3 = function (msg) {
-    providers$2.logger.warn(prefix$9 + ' ' + msg);
-};
-
-//
-// Mixin for all form elements
-var formElement$1 = {
-    inputData: function inputData(el, data) {
-        var model = this.model;
-        if (!data) data = {};
-        data.id = data.id || model.uid;
-        model.data = data;
-        el.attr('id', data.id);
-        if (data.classes) el.classed(data.classes, true);
-        addAttributes$1(el, model, data.attributes);
-
-        if (data.disabled) {
-            if (isString(data.disabled)) el.attr('d3-attr-disabled', data.disabled);else el.property('disabled', true);
-        }
-        return data;
-    },
-
-
-    // wrap the form element with extensions
-    wrap: function wrap(fieldEl) {
-        var field = this,
-            wrappedEl = fieldEl;
-
-        field.model.$formExtensions.forEach(function (extension) {
-            wrappedEl = extension(field, wrappedEl, fieldEl) || wrappedEl;
-        });
-
-        return wrappedEl;
-    },
-    wrapTemplate: function wrapTemplate(sel, template) {
-        var div = document.createElement('div'),
-            outer = select(div).html(template),
-            slot = outer.select('slot');
-
-        if (!slot.size()) {
-            warn$3('template does not provide a slot element');
-            return sel;
-        }
-        var target = select(slot.node().parentNode);
-        sel.nodes().forEach(function (node) {
-            target.insert(function () {
-                return node;
-            }, 'slot');
-        });
-        slot.remove();
-        return selectAll(div.children);
-    }
-};
-
-// A mixin for all form field components
-var field$1 = objectAssign({}, formElement$1, {
-
-    model: {
-        value: null,
-        error: '',
-        isDirty: null,
-        changed: false,
-        srOnly: false,
-        placeholder: '',
-        showError: {
-            reactOn: ['error', 'isDirty'],
-            get: function get() {
-                if (this.error) return this.isDirty;
-                return false;
-            }
-        },
-        // default validate function does nothing, IMPORTANT!
-        $validate: function $validate() {}
-    },
-
-    inputData: function inputData(el, data) {
-        // call parent method
-        data = formElement$1.inputData.call(this, el, data);
-        if (!data.name) return warn$3('Input field without a name');
-
-        el.attr('name', data.name);
-        data.placeholder = data.placeholder || data.label || data.name;
-        var model = this.model;
-        //
-        // add this model to the form inputs object
-        model.form.inputs[data.name] = model;
-        // give name to model (for debugging info messages)
-        model.name = data.name;
-        model.$on('value', function () {
-            // set isDirty to false if first time here, otherwise true
-            if (model.isDirty === null) {
-                model.isDirty = false;
-            } else {
-                model.isDirty = true;
-                model.changed = true;
-            }
-            // trigger a change event in the form
-            // required for form method such as $isValid
-            model.form.$change();
-        });
-        return data;
-    }
-});
-
-function addAttributes$1(el, model, attributes) {
-    var expr, attr, t;
-
-    if (!isObject(attributes)) return;
-
-    for (attr in attributes) {
-        expr = attributes[attr];
-        if (isObject(expr)) {
-            if (attr.substring(0, 3) === 'd3-') {
-                t = attr.replace('-', '_');
-                model.$set(t, expr);
-                expr = t;
-            } else {
-                expr = JSON.stringify(expr);
-            }
-        }
-        el.attr(attr, expr || '');
-    }
-}
-
-var componentsFromType$1 = {
-    text: 'input',
-    email: "input",
-    password: 'input',
-    checkbox: 'input',
-    number: 'input',
-    date: 'input',
-    url: 'input',
-    'datetime-local': 'input'
-};
-
-// return A promise which execute a callback at the next event Loop cycle
-
-
-function formComponent$1(child) {
-    var type = child.type || 'text';
-    return componentsFromType$1[type] || type;
-}
-
-function addChildren$1(sel) {
-    var children = this.model.data.children;
-    if (children) {
-        if (!isArray(children)) {
-            warn$3('children should be an array of fields, for ' + (typeof children === 'undefined' ? 'undefined' : _typeof(children)));
-            return sel;
-        }
-        sel.selectAll('.d3form').data(children).enter().append(formChild$1).classed('d3form', true);
-    }
-    return sel;
-}
-
-function formChild$1(child) {
-    var component = formComponent$1(child);
-    if (!component) {
-        warn$3('Could not find form component ' + child.type);
-        component = 'input';
-        child.type = 'hidden';
-    }
-    return document.createElement('d3-form-' + component);
-}
-
-//
-// Fieldset element
-objectAssign({}, formElement$1, {
-    render: function render(data) {
-        var tag = data ? data.tag || 'fieldset' : 'fieldset',
-            el = this.createElement(tag);
-        data = this.inputData(el, data);
-        return addChildren$1.call(this, el);
-    }
-});
-
-var required$1 = {
-    set: function set(el, data) {
-        var value = data.required;
-        if (isString(value)) el.attr('d3-required', value);else el.property('required', value || null);
-    },
-    validate: function validate(el, value) {
-        if (el.property('required')) if (!value) return 'required';else if (value === '') {
-            // this is valid, no need to continue with the remaining validators
-            return true;
-        }
-    }
-};
-
-var minLength$1 = {
-    set: function set(el, data) {
-        var value = data.minLength;
-        if (isString(value)) el.attr('d3-attr-minlength', value);else if (value !== undefined) el.attr('minlength', value);
-    },
-    validate: function validate(el, value) {
-        var l = +el.attr('minlength');
-        if (l === l && l > 0 && value.length < l) return 'too short - ' + l + ' characters or more expected';
-    }
-};
-
-var maxLength$1 = {
-    set: function set(el, data) {
-        var value = data.maxLength;
-        if (isString(value)) el.attr('d3-attr-maxlength', value);else if (value !== undefined) el.attr('maxlength', value);
-    },
-    validate: function validate(el, value) {
-        var l = +el.attr('maxlength');
-        if (l === l && l > 0 && value && value.length > l) return 'too long - ' + l + ' characters or less expected';
-    }
-};
-
-var minimum$1 = {
-    set: function set(el, data) {
-        var value = data.minimum;
-        if (isString(value)) el.attr('d3-attr-min', value);else if (value !== undefined) el.attr('min', value);
-    },
-    validate: function validate(el, value) {
-        var r = range$2(el);
-        if (r && +value < r[0]) return 'must be greater or equal ' + r[0];
-    }
-};
-
-var maximum$1 = {
-    set: function set(el, data) {
-        var value = data.maximum;
-        if (isString(value)) el.attr('d3-attr-max', value);else if (value !== undefined) el.attr('max', value);
-    },
-    validate: function validate(el, value) {
-        var r = range$2(el);
-        if (r && +value > r[1]) return 'must be less or equal ' + r[1];
-    }
-};
-
-// validator singleton
-var validators$1 = {
-
-    // get the list of validators
-    // custom is an optional list of custom validators
-    get: function get(custom) {
-        var validators = this.all.slice(0);
-        if (isObject(custom)) for (var key in custom) {
-            validators.push(customValidator$1(key, custom[key]));
-        }return validators;
-    },
-
-
-    // add model validators to a form-field
-    set: function set(vm, el) {
-        var model = vm.model;
-        model._view = vm;
-        model.validators.forEach(function (validator) {
-            return validator.set(el, model.data);
-        });
-        model.$on('value.validate', this.validate);
-        model.$validate = this.validate;
-    },
-    validate: function validate() {
-        var model = this,
-            vm = model._view,
-            validators = model.validators,
-            value = model.value,
-            el = vm.sel.attr('id') === model.data.id ? vm.sel : vm.sel.select('#' + model.data.id),
-            validator,
-            msg;
-
-        for (var i = 0; i < validators.length; ++i) {
-            validator = validators[i];
-            msg = validator.validate(el, value);
-            if (msg) {
-                if (msg === true) msg = '';
-                break;
-            }
-        }
-
-        model.error = msg || '';
-    },
-
-
-    all: [required$1, minLength$1, maxLength$1, minimum$1, maximum$1]
-};
-
-function range$2(el) {
-    var l0 = el.attr('min'),
-        l1 = el.attr('max');
-    l0 = l0 === null ? -Infinity : +l0;
-    l1 = l1 === null ? Infinity : +l1;
-    return [l0, l1];
-}
-
-function customValidator$1(key, method) {
-
-    return {
-        set: function set(el, data) {
-            var value = data[key];
-            if (!value) return;
-        },
-        validate: function validate(el, value) {
-            return method(el, value);
-        }
-    };
-}
-
-var checks$1 = ['checkbox', 'radio'];
-
-//
-// Input element
-objectAssign({}, field$1, {
-    render: function render(data) {
-        var el = this.createElement('input');
-        data = this.inputData(el, data);
-
-        el.attr('type', data.type || 'text').attr('d3-value', 'value');
-
-        if (checks$1.indexOf(el.attr('type')) === -1) el.attr('placeholder', data.placeholder);
-
-        validators$1.set(this, el);
-        return this.wrap(el);
-    }
-});
-
-//
-// Textarea element
-objectAssign({}, field$1, {
-
-    render: function render(data) {
-        var el = this.createElement('textarea');
-        data = this.inputData(el, data);
-        el.attr('placeholder', data.placeholder).attr('d3-value', 'value');
-
-        validators$1.set(this, el);
-        return this.wrap(el);
-    }
-
-});
-
-//
-// Select element
-objectAssign({}, field$1, {
-
-    model: objectAssign({
-        options: [],
-        $optionLabel: optionLabel$1,
-        $optionValue: optionValue$1
-    }, field$1.model),
-
-    render: function render(data) {
-        var el = this.createElement('select');
-        data = this.inputData(el, data);
-        el.attr('d3-value', 'value').attr('placeholder', data.placeholder).append('option').attr('d3-for', 'option in options').attr('d3-html', '$optionLabel()').attr('d3-attr-value', '$optionValue()');
-
-        validators$1.set(this, el);
-        return this.wrap(el);
-    }
-});
-
-function optionValue$1() {
-    if (isArray(this.option)) return this.option[0];
-    return this.option;
-}
-
-function optionLabel$1() {
-    if (isArray(this.option)) return this.option[1] || this.option[0];
-    return this.option;
-}
-
-//
-// Submit element
-objectAssign({}, formElement$1, {
-
-    render: function render(data) {
-        var tag = data ? data.tag || 'button' : 'button',
-            el = this.createElement(tag);
-
-        data = this.inputData(el, data);
-        var model = this.model;
-        //
-        // model non-reactive attributes
-        model.type = data.type || 'submit';
-        if (data.endpoint) model.endpoint = data.endpoint;
-        //
-        // default submit function
-        model.$submit = function () {
-            model.actions.submit.call(model, event);
-        };
-
-        if (!isString(data.disabled)) {
-            this.model.$set('disabled', data.disabled || null);
-            data.disabled = 'disabled';
-        }
-        if (!data.submit) data.submit = '$submit()';
-
-        el.attr('type', model.type).attr('name', model.name).attr('d3-attr-disabled', data.disabled).attr('d3-on-click', data.submit).html(data.label || 'submit');
-
-        return this.wrap(el);
-    }
-});
-
-//
-//  Form Responses
-//  ====================
-//
-//  To add/override responses:
-//
-//  import viewForms from 'd3-view'
-//
-//  viewForms.responses.myresponse = function (data, status, headers) {
-//      ...
-//  }
-
-//
-// Form Actions
-
-// Main form component
-
-// Forms plugin
-
-//
-//  Bootstrap plugin
-//  ===================
-//
-//  Simply add a new form extension to wrap form fields
-//
-
-//
-//  Asynchronous module definitions
-var isAbsolute$1 = new RegExp('^([a-z]+://|//)');
-
-function urlIsAbsolute$1(url) {
-    return typeof url === 'string' && isAbsolute$1.test(url);
-}
-
-var require$3 = requireFrom(function (name) {
-    var nameUrl = require$3.libs.get(name) || name;
-    if (urlIsAbsolute$1(nameUrl)) return nameUrl;
-    return 'https://unpkg.com/' + name;
-});
-
-require$3.libs = map();
-
 //
 //  Array DataSource
 //  ====================
@@ -7599,7 +5035,7 @@ var array$1 = {
         if (isArray(config)) return { data: config };else if (isObject(config) && isArray(config.data)) return config;
     },
     getData: function getData() {
-        return resolvedPromise$1(this.asFrame(this._data));
+        return resolvedPromise(this.asFrame(this._data));
     }
 };
 
@@ -7747,10 +5183,10 @@ var tsv = dsv("\t");
 
 var tsvParse = tsv.parse;
 
-var prefix$10 = '[d3-data-source]';
+var prefix$6 = '[d3-data-source]';
 
-var warn$4 = function (msg) {
-    viewProviders.logger.warn(prefix$10 + ' ' + msg);
+var warn$2 = function (msg) {
+    viewProviders.logger.warn(prefix$6 + ' ' + msg);
 };
 
 var schemes = ['http', 'https', 'ws', 'wss'];
@@ -7776,7 +5212,7 @@ var remote = {
         var fetch = viewProviders.fetch,
             self = this;
         if (!fetch) {
-            warn$4('fetch provider not available, cannot submit');
+            warn$2('fetch provider not available, cannot submit');
             return [];
         }
         return fetch(this.url).then(parse).then(function (data) {
@@ -7788,93 +5224,10 @@ var remote = {
 function parse(response) {
     var ct = (response.headers.get('content-type') || '').split(';')[0];
     if (CSV.has(ct)) return response.text().then(csvParse);else if (ct === 'text/tab-separated-values') return response.text().then(tsvParse);else if (ct === 'application/json') return response.json();else {
-        warn$4('Cannot load content type \'' + ct + '\'');
+        warn$2('Cannot load content type \'' + ct + '\'');
         return [];
     }
 }
-
-//
-//  A composite dataSource
-//  ===================
-//
-//  A composite data source has the source attribute with the name of one
-//  or more data sets to use as the source for this data set.
-//  The source property is useful in combination with a transform pipeline
-//  to derive new data.
-//  If string-valued, indicates the name of the source data set.
-//  If array-valued, specifies a collection of data source names that
-//  should be merged (unioned) together.
-var composite = {
-    initialise: function initialise(config) {
-        this.source = config.source;
-    },
-    getConfig: function getConfig(config) {
-        if (isObject(config) && config.source) {
-            if (!isArray(config.source)) config.source = [config.source];
-            return config;
-        }
-    },
-    getData: function getData() {
-        var store = this.store,
-            sources = this.source,
-            self = this;
-
-        return Promise.all(sources.map(function (source) {
-            return store.getData(source);
-        })).then(function (frames) {
-            if (frames.length === 1) return frames[0];else if (self.config.merge) return self.mergeFrames(frames);else {
-                var fc = new FrameCollection();
-                frames.forEach(function (frame, index) {
-                    fc.frames.set(sources[index], frame);
-                });
-                return fc;
-            }
-        });
-    },
-
-
-    // TODO: implement frame merging
-    mergeFrames: function mergeFrames(frames) {
-        return frames[0];
-    }
-};
-
-function FrameCollection() {
-    this.frames = map();
-    Object.defineProperties(this, {
-        type: {
-            get: function get() {
-                return 'frameCollection';
-            }
-        }
-    });
-}
-
-FrameCollection.prototype = {
-    dataFrame: function dataFrame() {
-        var frames = this.frames.values();
-        for (var i = 0; i < frames.length; ++i) {
-            if (frames[i].type === 'dataframe') return frames[i];
-        }
-    }
-};
-
-var expression = {
-    initialise: function initialise(config) {
-        this.expression = viewExpression$1(config.expression);
-    },
-    getConfig: function getConfig(config) {
-        if (isObject(config) && config.expression) return config;
-    },
-    getData: function getData() {
-        var self = this,
-            model = this.store.model,
-            result = this.expression.eval(model);
-        if (isPromise(result)) return result.then(function (data) {
-            return self.asFrame(data);
-        });else return self.asFrame(result);
-    }
-};
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -9470,6 +6823,98 @@ DataFrame.prototype = {
     }
 };
 
+//
+//  A composite dataSource
+//  ===================
+//
+//  A composite data source has the source attribute with the name of one
+//  or more data sets to use as the source for this data set.
+//  The source property is useful in combination with a transform pipeline
+//  to derive new data.
+//  If string-valued, indicates the name of the source data set.
+//  If array-valued, specifies a collection of data source names that
+//  should be merged (unioned) together.
+var composite = {
+    initialise: function initialise(config) {
+        this.source = config.source;
+    },
+    getConfig: function getConfig(config) {
+        if (isObject(config) && config.source) {
+            if (!isArray(config.source)) config.source = [config.source];
+            return config;
+        }
+    },
+    getData: function getData(context) {
+        var store = this.store,
+            sources = this.source,
+            self = this;
+
+        return Promise.all(sources.map(function (source) {
+            return store.getData(source, context);
+        })).then(function (frames) {
+            var fc = void 0;
+            if (frames.length === 1) fc = frames[0];else if (self.config.merge) fc = self.mergeFrames(frames);else {
+                fc = new FrameCollection(store);
+                frames.forEach(function (frame, index) {
+                    fc.frames.set(sources[index], frame);
+                });
+            }
+            return self.asFrame(fc);
+        });
+    },
+
+
+    // TODO: implement frame merging
+    mergeFrames: function mergeFrames(frames) {
+        return frames[0];
+    }
+};
+
+function FrameCollection(store) {
+    this.frames = map();
+    Object.defineProperties(this, {
+        store: {
+            get: function get() {
+                return store;
+            }
+        },
+        type: {
+            get: function get() {
+                return 'frameCollection';
+            }
+        }
+    });
+}
+
+FrameCollection.prototype = {
+    new: function _new(data) {
+        return new DataFrame(data, null, this.store);
+    },
+    dataFrame: function dataFrame() {
+        var frames = this.frames.values();
+        for (var i = 0; i < frames.length; ++i) {
+            if (frames[i].type === 'dataframe') return frames[i];
+        }
+    }
+};
+
+var expression = {
+    initialise: function initialise(config) {
+        this.expression = viewExpression(config.expression);
+    },
+    getConfig: function getConfig(config) {
+        if (isObject(config) && config.expression) return config;
+    },
+    getData: function getData(context) {
+        var self = this,
+            model = this.store.model.$child(context),
+            result = this.expression.eval(model);
+        if (isPromise(result)) return result.then(function (data) {
+            return self.asFrame(data);
+        });else return self.asFrame(result);
+    }
+};
+
 var transformFactory = function (options) {
     var transform = options.transform,
         schema = options.schema || {},
@@ -9512,7 +6957,7 @@ var filter = transformFactory({
         required: ["expr"]
     },
     transform: function transform(frame, config) {
-        var expr = viewExpression$1(config.expr);
+        var expr = viewExpression(config.expr);
         return frame.data.reduce(function (data, d, index) {
             if (expr.safeEval({ d: d, index: index, frame: frame })) data.push(d);
             return data;
@@ -9520,10 +6965,10 @@ var filter = transformFactory({
     }
 });
 
-var prefix$11 = '[d3-visualize]';
+var prefix$7 = '[d3-visualize]';
 
-var warn$5 = function (msg, err) {
-    viewProviders.logger.warn(prefix$11 + ' ' + msg);
+var warn$3 = function (msg, err) {
+    viewProviders.logger.warn(prefix$7 + ' ' + msg);
     if (err) viewProviders.logger.error(err.stack);
 };
 
@@ -9575,13 +7020,13 @@ var aggregate = function (config) {
 
     if (!fields && !ops) return countAll;
 
-    if (!isArray(fields)) return warn$5('Aggregate transforms expect an array of fields');
+    if (!isArray(fields)) return warn$3('Aggregate transforms expect an array of fields');
     if (!ops) ops = 'count';
     if (isString(ops)) ops = fillArray(fields.length, ops);
-    if (!isArray(ops)) return warn$5('Aggregate transform expects an array of ops');
-    if (ops.length < fields.length) warn$5('Aggregate transforms expects an ops array with same length as fields');
+    if (!isArray(ops)) return warn$3('Aggregate transform expects an array of ops');
+    if (ops.length < fields.length) warn$3('Aggregate transforms expects an ops array with same length as fields');
     if (!as) as = [];
-    if (!isArray(as)) return warn$5('Aggregate transform expects an array of as fields');
+    if (!isArray(as)) return warn$3('Aggregate transform expects an array of as fields');
     return aggregate;
 
     function countAll(frame) {
@@ -9608,7 +7053,7 @@ var aggregate = function (config) {
                 op = operations.get(name);
                 if (!op) {
                     op = count;
-                    warn$5('Operation ' + ops[index] + ' is not supported, use count');
+                    warn$3('Operation ' + ops[index] + ' is not supported, use count');
                 }
             }
             data.push({
@@ -9634,7 +7079,7 @@ var aggregate = function (config) {
                 op = scalar_operations.get(name);
                 if (!op) {
                     op = scalar_operations.get('count');
-                    warn$5('Operation ' + name + ' is not supported, use count');
+                    warn$3('Operation ' + name + ' is not supported, use count');
                 }
             }
             return {
@@ -9664,9 +7109,9 @@ var crossfilter$4 = function (config) {
     var fields = config.fields,
         query = config.query;
 
-    if (!isArray(fields)) return warn$5('crossfilter transform expects an array of fields');
-    if (!isArray(query)) return warn$5('crossfilter transform expects an array of query');
-    if (query.length != fields.length) return warn$5('crossfilter transform expects an query array with same length as fields');
+    if (!isArray(fields)) return warn$3('crossfilter transform expects an array of fields');
+    if (!isArray(query)) return warn$3('crossfilter transform expects an array of query');
+    if (query.length != fields.length) return warn$3('crossfilter transform expects an query array with same length as fields');
 
     return crossfilter;
 
@@ -9690,7 +7135,7 @@ var timeseries = function (config) {
     var sortby = config.sortby,
         groupby = config.groupby;
 
-    if (!sortby) warn$5('timeseries transform requires a "sortby" entry');
+    if (!sortby) warn$3('timeseries transform requires a "sortby" entry');
 
     return timeseries;
 
@@ -10722,7 +8167,7 @@ var mapfields = transformFactory({
         fields.each(function (entry, key) {
             if (isString(entry)) entry = { type: entry };
             converter = converters[entry.type];
-            if (!converter) warn$5('Cannot convert field ' + key + ' to type ' + entry.type);else mappers.push([key, converter(entry)]);
+            if (!converter) warn$3('Cannot convert field ' + key + ' to type ' + entry.type);else mappers.push([key, converter(entry)]);
         });
 
         if (mappers.length) frame = frame.map(function (d) {
@@ -10924,7 +8369,7 @@ var diff = transformFactory({
 // Collection of transforms
 //
 //  transforms Store
-var transformStore = map({
+var transformStore = objectAssign(map({
     filter: filter,
     aggregate: aggregate,
     mapfields: mapfields,
@@ -10933,18 +8378,28 @@ var transformStore = map({
     movingaverage: movingaverage,
     groupsmall: groupsmall,
     diff: diff
+}), {
+    add: function add(name, o) {
+        this.set(name, transformFactory(o));
+    }
 });
 
-// Apply data transforms to a series
+//  Apply data transforms to a series
+//  Allow for asynchronous transforms
 function applyTransforms(frame, transforms) {
-    var ts = void 0;
     if (!transforms) return frame;
-    transforms.forEach(function (transform) {
-        if (transform) {
-            ts = transform(frame);
-            if (isArray(ts)) frame = frame.new(ts);else if (ts) frame = ts;
-        }
-    });
+    return applyt(frame, transforms.slice());
+}
+
+function applyt(frame, transforms, res) {
+    if (isArray(res)) frame = frame.new(res);else if (res) frame = res;
+    if (transforms.length) {
+        var transform = transforms.splice(0, 1)[0],
+            ts = transform ? transform(frame) : null;
+        if (isPromise(ts)) return ts.then(function (res) {
+            return applyt(frame, transforms, res);
+        });else return applyt(frame, transforms, ts);
+    }
     return frame;
 }
 
@@ -10955,7 +8410,8 @@ var dataEvents = dispatch('init', 'data');
 //  ======================
 var dataSourcePrototype = {
 
-    // get the config object-assign// This method is used by the prototype
+    // get the config
+    // This method is used by the prototype
     // to check if the config object is a valid one
     getConfig: function getConfig() {},
 
@@ -10973,7 +8429,7 @@ var dataSourcePrototype = {
         if (!isArray(transforms)) transforms = [transforms];
         transforms.forEach(function (transform) {
             t = transformStore.get(transform.type);
-            if (!t) warn$5('Transform type "' + transform.type + '" not known');else self.transforms.push(t(transform));
+            if (!t) warn$3('Transform type "' + transform.type + '" not known');else self.transforms.push(t(transform));
         });
     },
 
@@ -11076,7 +8532,7 @@ dataSources.add('expression', expression);
 //  (or “rows”), which may contain any number of named data
 //  attributes (fields, or “columns”).
 //  Records are modeled using standard JavaScript objects.
-function DataStore(model) {
+function DataStore(model$$1) {
     var sources = map();
 
     Object.defineProperties(this, {
@@ -11090,7 +8546,7 @@ function DataStore(model) {
     // transforms function
     this.transforms = objectAssign({}, transformStore);
     this.dataCount = 0;
-    this.model = model;
+    this.model = model$$1 && isFunction(model$$1.$child) ? model$$1 : model(model$$1);
 }
 
 DataStore.prototype = {
@@ -11138,12 +8594,12 @@ DataStore.prototype = {
 
 
     // get data from a source
-    getData: function getData(source) {
+    getData: function getData(source, context) {
         var ds = this.sources.get(source);
         if (!ds) throw new Error('Data source ' + source + ' not available');
-        if (ds.cachedFrame) return resolvedPromise$1(ds.cachedFrame);
-        var data = ds.getData();
-        if (!isPromise(data)) data = resolvedPromise$1(data);
+        if (ds.cachedFrame) return resolvedPromise(ds.cachedFrame);
+        var data = ds.getData(context);
+        if (!isPromise(data)) data = resolvedPromise(data);
         return data.then(function (frame) {
             if (ds.config.cache) ds.cachedFrame = frame;
             return frame;
@@ -11152,7 +8608,7 @@ DataStore.prototype = {
     eval: function _eval(expr, context) {
         var ctx = this.model.$child(context);
         ctx.dataStore = this;
-        return viewExpression$1(expr).safeEval(ctx);
+        return viewExpression(expr).safeEval(ctx);
     },
     dataName: function dataName(name) {
         this.dataCount++;
@@ -12856,23 +10312,23 @@ var visualPrototype = objectAssign({}, {
     // get a reactive model for type
     getModel: function getModel(type) {
         if (!type) type = this.visualType;
-        var model = this.model[type];
-        if (!model && type in globalOptions) {
+        var model$$1 = this.model[type];
+        if (!model$$1 && type in globalOptions) {
             var options = pop(this.options, type),
                 self = this;
-            if (this.visualParent) model = this.visualParent.getModel(type).$child(options);else {
-                model = this.model.$new(globalOptions[type]);
-                model.$update(options);
+            if (this.visualParent) model$$1 = this.visualParent.getModel(type).$child(options);else {
+                model$$1 = this.model.$new(globalOptions[type]);
+                model$$1.$update(options);
             }
-            this.model[type] = model;
+            this.model[type] = model$$1;
             //
             // Trigger redraw when model change
             // Do not fecth data
-            model.$on(function () {
+            model$$1.$on(function () {
                 return self.redraw(false);
             });
         }
-        return model;
+        return model$$1;
     },
 
 
@@ -12881,10 +10337,10 @@ var visualPrototype = objectAssign({}, {
         if (!name) name = this.visualType;
         return name + '-' + this.model.uid;
     },
-    modelProperty: function modelProperty(name, model) {
+    modelProperty: function modelProperty(name, model$$1) {
         var me = this.getModel(),
             value = me[name];
-        return value === undefined ? model[name] : value;
+        return value === undefined ? model$$1[name] : value;
     },
     dim: function dim(size, refSize, minSize, maxSize) {
         return minmax(sizeValue(size, refSize), minSize, maxSize);
@@ -12914,7 +10370,7 @@ var createVisual = function (type, proto) {
     var opts = pop(proto, 'options');
     if (opts) globalOptions[type] = opts;
 
-    function Visual(element, options, parent, model) {
+    function Visual(element, options, parent, model$$1) {
         Object.defineProperties(this, {
             visualType: {
                 get: function get() {
@@ -12934,7 +10390,7 @@ var createVisual = function (type, proto) {
             }
         });
         this.visualParent = parent;
-        this.model = parent ? parent.model.$new() : model || model$2();
+        this.model = parent ? parent.model.$new() : model$$1 || model();
         this.options = options || {};
         this.drawing = false;
         visuals.events.call('before-init', undefined, this);
@@ -12943,6 +10399,7 @@ var createVisual = function (type, proto) {
     }
 
     Visual.prototype = objectAssign({}, visualPrototype, proto);
+    Visual.prototype.constructor = Visual;
     visuals.types[type] = Visual;
     return Visual;
 };
@@ -12950,7 +10407,7 @@ var createVisual = function (type, proto) {
 var array$3 = Array.prototype;
 
 var map$6 = array$3.map;
-var slice$3 = array$3.slice;
+var slice$2 = array$3.slice;
 
 var implicit = { name: "implicit" };
 
@@ -12959,7 +10416,7 @@ function ordinal(range) {
       domain = [],
       unknown = implicit;
 
-  range = range == null ? [] : slice$3.call(range);
+  range = range == null ? [] : slice$2.call(range);
 
   function scale(d) {
     var key = d + "",
@@ -12984,7 +10441,7 @@ function ordinal(range) {
   };
 
   scale.range = function (_) {
-    return arguments.length ? (range = slice$3.call(_), scale) : range.slice();
+    return arguments.length ? (range = slice$2.call(_), scale) : range.slice();
   };
 
   scale.unknown = function (_) {
@@ -13197,11 +10654,11 @@ function continuous(deinterpolate, reinterpolate) {
   };
 
   scale.range = function (_) {
-    return arguments.length ? (range = slice$3.call(_), rescale()) : range.slice();
+    return arguments.length ? (range = slice$2.call(_), rescale()) : range.slice();
   };
 
   scale.rangeRound = function (_) {
-    return range = slice$3.call(_), interpolate$$1 = interpolateRound, rescale();
+    return range = slice$2.call(_), interpolate$$1 = interpolateRound, rescale();
   };
 
   scale.clamp = function (_) {
@@ -13878,7 +11335,7 @@ function quantile$1() {
   };
 
   scale.range = function (_) {
-    return arguments.length ? (range = slice$3.call(_), rescale()) : range.slice();
+    return arguments.length ? (range = slice$2.call(_), rescale()) : range.slice();
   };
 
   scale.quantiles = function () {
@@ -13916,7 +11373,7 @@ function quantize$1() {
   };
 
   scale.range = function (_) {
-    return arguments.length ? (n = (range = slice$3.call(_)).length - 1, rescale()) : range.slice();
+    return arguments.length ? (n = (range = slice$2.call(_)).length - 1, rescale()) : range.slice();
   };
 
   scale.invertExtent = function (y) {
@@ -13941,11 +11398,11 @@ function threshold() {
   }
 
   scale.domain = function (_) {
-    return arguments.length ? (domain = slice$3.call(_), n = Math.min(domain.length, range.length - 1), scale) : domain.slice();
+    return arguments.length ? (domain = slice$2.call(_), n = Math.min(domain.length, range.length - 1), scale) : domain.slice();
   };
 
   scale.range = function (_) {
-    return arguments.length ? (range = slice$3.call(_), n = Math.min(domain.length, range.length - 1), scale) : range.slice();
+    return arguments.length ? (range = slice$2.call(_), n = Math.min(domain.length, range.length - 1), scale) : range.slice();
   };
 
   scale.invertExtent = function (y) {
@@ -14254,7 +11711,7 @@ var Visual = createVisual('visual', {
     // Draw the visual
     draw: function draw(fetchData) {
         if (this.drawing) {
-            warn$5(this.toString() + ' already drawing');
+            warn$3(this.toString() + ' already drawing');
             return this.drawing;
         } else if (!this.drawCount) {
             this.drawCount = 1;
@@ -14272,7 +11729,7 @@ var Visual = createVisual('visual', {
             visuals.events.call('after-draw', undefined, self);
         }, function (err) {
             delete self.drawing;
-            warn$5('Could not draw ' + self.toString() + ': ' + err);
+            warn$3('Could not draw ' + self.toString() + ': ' + err, err);
         });
     },
     clear: function clear() {},
@@ -14282,7 +11739,7 @@ var Visual = createVisual('visual', {
     addVisual: function addVisual(options) {
         var type = pop(options, 'type');
         var VisualClass = visuals.types[type];
-        if (!VisualClass) warn$5('Cannot add visual "' + type + '", not available');else return new VisualClass(this.element, options, this);
+        if (!VisualClass) warn$3('Cannot add visual "' + type + '", not available');else return new VisualClass(this.element, options, this);
     },
 
     //
@@ -14332,8 +11789,8 @@ var Visual = createVisual('visual', {
 if (inBrowser) {
     // DOM observer
     // Check for changes in the DOM that leads to visual actions
-    var observer$2 = new MutationObserver(visualManager$2);
-    observer$2.observe(document.documentElement, {
+    var observer$1 = new MutationObserver(visualManager$1);
+    observer$1.observe(document.documentElement, {
         childList: true,
         subtree: true
     });
@@ -14341,24 +11798,24 @@ if (inBrowser) {
 
 //
 //  Clears visualisation going out of scope
-function visualManager$2(records) {
+function visualManager$1(records) {
     records.forEach(function (record) {
         var nodes = record.removedNodes;
         if (!nodes || !nodes.length) return; // phantomJs hack
         nodes.forEach(function (node) {
             if (node.querySelectorAll) {
-                if (!node.__visual__) select(node).selectAll('.d3-visual').each(destroy$2);else destroy$2.call(node);
+                if (!node.__visual__) select(node).selectAll('.d3-visual').each(destroy$1);else destroy$1.call(node);
             }
         });
     });
 }
 
-function destroy$2() {
+function destroy$1() {
     var viz = this.__visual__;
     if (viz) {
         viz.destroy();
         viewDebug('Removed "' + viz.toString() + '" from DOM, ' + visuals.live.length + ' live visuals left');
-    } else warn$5('d3-visual without __visual__ object');
+    } else warn$3('d3-visual without __visual__ object');
 }
 
 var camelFunction = function (o, prefix, name, objectOnly) {
@@ -14474,7 +11931,7 @@ var chartPrototype = {
         var _this = this;
 
         if (this.drawing) {
-            warn$5(this.toString() + ' already drawing');
+            warn$3(this.toString() + ' already drawing');
             return this.drawing;
         }
         var self = this,
@@ -14491,7 +11948,7 @@ var chartPrototype = {
             doDraw.apply(self, this._drawArgs);
             visuals.events.call('after-draw', undefined, self);
         } else {
-            return Promise.all([this.requires ? require$3.apply(undefined, this.requires) : [],
+            return Promise.all([this.requires ? require$1.apply(undefined, this.requires) : [],
             // this.getMetaData(),
             this.getData()]).then(function (args) {
                 delete self.drawing;
@@ -14505,7 +11962,7 @@ var chartPrototype = {
                 }
             }, function (err) {
                 delete self.drawing;
-                warn$5('Could not draw ' + self.toString() + ': ' + err, err);
+                warn$3('Could not draw ' + self.toString() + ': ' + err, err);
                 _this.displayError(err);
             });
         }
@@ -14661,10 +12118,10 @@ visuals.options.dataContext = {
 vizPrototype.getData = function () {
     var name = this.model.data;
     if (!name) {
-        warn$5('Visual ' + this.visualType + ' without data name, cannot get data');
-        return resolvedPromise$1();
+        warn$3('Visual ' + this.visualType + ' without data name, cannot get data');
+        return resolvedPromise();
     }
-    return this.dataStore.getData(name);
+    return this.dataStore.getData(name, { $visual: this });
 };
 
 //
@@ -14709,7 +12166,7 @@ function setupLayer(layer) {
     if (isString(data)) data = { source: data };
     if (!data.name) data.name = layer.model.uid;
     data = store.addSources(data);
-    if (data) layer.model.$set('data', data.name);else warn$5('Could not create data source ' + data.name);
+    if (data) layer.model.$set('data', data.name);else warn$3('Could not create data source ' + data.name);
 }
 
 visuals.options.font = {
@@ -14889,7 +12346,7 @@ function marginv(v) {
     };
 }
 
-var slice$4 = Array.prototype.slice;
+var slice$3 = Array.prototype.slice;
 
 var identity$4 = function (x) {
   return x;
@@ -15001,15 +12458,15 @@ function axis(orient, scale) {
   };
 
   axis.ticks = function () {
-    return tickArguments = slice$4.call(arguments), axis;
+    return tickArguments = slice$3.call(arguments), axis;
   };
 
   axis.tickArguments = function (_) {
-    return arguments.length ? (tickArguments = _ == null ? [] : slice$4.call(_), axis) : tickArguments.slice();
+    return arguments.length ? (tickArguments = _ == null ? [] : slice$3.call(_), axis) : tickArguments.slice();
   };
 
   axis.tickValues = function (_) {
-    return arguments.length ? (tickValues = _ == null ? null : slice$4.call(_), axis) : tickValues && tickValues.slice();
+    return arguments.length ? (tickValues = _ == null ? null : slice$3.call(_), axis) : tickValues && tickValues.slice();
   };
 
   axis.tickFormat = function (_) {
@@ -15092,6 +12549,7 @@ vizPrototype.xAxis1 = function (location, scale, box, value) {
     this.applyTransform(ga, this.translateAxis(location, box));
     formatAxis(ga.transition(this.transition('x-axis')).call(axis), model, scale);
     if (model.title) this.axisTitle(ga, location, scale, box, model);
+    return ga;
 };
 
 vizPrototype.yAxis1 = function (location, scale, box, value) {
@@ -15101,6 +12559,7 @@ vizPrototype.yAxis1 = function (location, scale, box, value) {
     this.applyTransform(ga, this.translateAxis(location, box));
     formatAxis(ga.transition(this.transition('x-axis')).call(axis), model, scale);
     if (model.title) this.axisTitle(ga, location, scale, box, model);
+    return ga;
 };
 
 vizPrototype.axis = function (orientation, scale) {
@@ -15848,7 +13307,7 @@ var pie = function () {
   return pie;
 };
 
-var slice$5 = Array.prototype.slice;
+var slice$4 = Array.prototype.slice;
 
 var circle = {
   draw: function draw(context, size) {
@@ -16785,7 +14244,7 @@ var stack = function () {
   }
 
   stack.keys = function (_) {
-    return arguments.length ? (keys = typeof _ === "function" ? _ : constant$4(slice$5.call(_)), stack) : keys;
+    return arguments.length ? (keys = typeof _ === "function" ? _ : constant$4(slice$4.call(_)), stack) : keys;
   };
 
   stack.value = function (_) {
@@ -16793,7 +14252,7 @@ var stack = function () {
   };
 
   stack.order = function (_) {
-    return arguments.length ? (order = _ == null ? none$2 : typeof _ === "function" ? _ : constant$4(slice$5.call(_)), stack) : order;
+    return arguments.length ? (order = _ == null ? none$2 : typeof _ === "function" ? _ : constant$4(slice$4.call(_)), stack) : order;
   };
 
   stack.offset = function (_) {
@@ -17141,9 +14600,9 @@ var matcher$2 = function matcher(selector) {
 };
 
 if (typeof document !== "undefined") {
-  var element$4 = document.documentElement;
-  if (!element$4.matches) {
-    var vendorMatches$1 = element$4.webkitMatchesSelector || element$4.msMatchesSelector || element$4.mozMatchesSelector || element$4.oMatchesSelector;
+  var element$3 = document.documentElement;
+  if (!element$3.matches) {
+    var vendorMatches$1 = element$3.webkitMatchesSelector || element$3.msMatchesSelector || element$3.mozMatchesSelector || element$3.oMatchesSelector;
     matcher$2 = function matcher(selector) {
       return function () {
         return vendorMatches$1.call(this, selector);
@@ -17159,8 +14618,8 @@ var filterEvents$1 = {};
 
 
 if (typeof document !== "undefined") {
-  var element$5 = document.documentElement;
-  if (!("onmouseenter" in element$5)) {
+  var element$4 = document.documentElement;
+  if (!("onmouseenter" in element$4)) {
     filterEvents$1 = { mouseenter: "mouseover", mouseleave: "mouseout" };
   }
 }
@@ -17930,7 +15389,7 @@ Selection$2.prototype = selection$2.prototype = {
   dispatch: selection_dispatch$1
 };
 
-var select$5 = function (selector) {
+var select$3 = function (selector) {
     return typeof selector === "string" ? new Selection$2([[document.querySelector(selector)]], [document.documentElement]) : new Selection$2([[selector]], root$2);
 };
 
@@ -18119,7 +15578,7 @@ function tickStep$1(start, stop, count) {
 var array$5 = Array.prototype;
 
 var map$8 = array$5.map;
-var slice$7 = array$5.slice;
+var slice$6 = array$5.slice;
 
 var constant$7 = function (x) {
   return function () {
@@ -18225,11 +15684,11 @@ function continuous$1(deinterpolate, reinterpolate) {
   };
 
   scale.range = function (_) {
-    return arguments.length ? (range = slice$7.call(_), rescale()) : range.slice();
+    return arguments.length ? (range = slice$6.call(_), rescale()) : range.slice();
   };
 
   scale.rangeRound = function (_) {
-    return range = slice$7.call(_), interpolate$$1 = interpolateRound, rescale();
+    return range = slice$6.call(_), interpolate$$1 = interpolateRound, rescale();
   };
 
   scale.clamp = function (_) {
@@ -19064,7 +16523,7 @@ var d3_reverse = function d3_reverse(arr) {
 //Text wrapping code adapted from Mike Bostock
 var d3_textWrapping = function d3_textWrapping(text, width) {
   text.each(function () {
-    var text = select$5(this),
+    var text = select$3(this),
         words = text.text().split(/\s+/).reverse(),
         word,
         line = [],
@@ -20019,7 +17478,7 @@ vizPrototype.legend = function (cfg, box) {
 
     if (!model.location) return;
 
-    if (!legend) return warn$5('Could not load legend ' + name);
+    if (!legend) return warn$3('Could not load legend ' + name);
     legend = legend().orient(model.orient);
 
     if (model.title) {
@@ -20170,7 +17629,7 @@ vizPrototype.mouseOver = function () {
         var strategy = void 0;
         model.over.forEach(function (name) {
             strategy = mouseStrategies.get(name);
-            if (!strategy) warn$5('Unknown mouse strategy ' + name);else strategy(self, sel, d, i);
+            if (!strategy) warn$3('Unknown mouse strategy ' + name);else strategy(self, sel, d, i);
         });
     };
 };
@@ -20185,7 +17644,7 @@ vizPrototype.mouseOut = function () {
         var strategy = void 0;
         model.over.forEach(function (name) {
             strategy = mouseStrategies.get(name);
-            if (!strategy) warn$5('Unknown mouse strategy ' + name);else strategy.out(self, sel, d, i);
+            if (!strategy) warn$3('Unknown mouse strategy ' + name);else strategy.out(self, sel, d, i);
         });
     };
 };
@@ -21173,7 +18632,7 @@ var VisualContainer = createVisual('container', {
     },
     draw: function draw(fetchData) {
         if (this.drawing) {
-            warn$5(this.toString() + ' already drawing');
+            warn$3(this.toString() + ' already drawing');
             return this.drawing;
         }
         var self = this;
@@ -21199,7 +18658,8 @@ var VisualContainer = createVisual('container', {
 var vizComponent = {
     props: ['schema', // Schema is a collection of fields to display in the table
     'datasource', // Data source
-    'plugins'],
+    'plugins', // list of string/objects
+    'options'],
 
     render: function render(props, attrs, el) {
         var self = this,
@@ -21208,6 +18668,7 @@ var vizComponent = {
         // build
         return this.getSchema(props.schema, function (schema) {
             if (!isObject(schema)) schema = {};
+            schema = objectAssign({}, props.options, schema);
             return self.build(schema, inner, attrs);
         });
     },
@@ -21226,7 +18687,7 @@ var vizComponent = {
 
         if (isString(input)) {
             return this.json(input).then(build).catch(function (err) {
-                warn$5('Could not reach ' + input + ': ' + err);
+                warn$3('Could not reach ' + input + ': ' + err, err);
             });
         } else return build(input);
     },
@@ -21485,7 +18946,7 @@ var grouper = function () {
         if (groupby) {
             labels = frame.dimension(groupby).group().top(Infinity).map(function (g) {
                 return g['key'];
-            });
+            }).sort();
             if (labels.length <= 1) labels = null;
         }
 
@@ -21617,7 +19078,7 @@ var lineDrawing = {
     curve: function curve(name) {
         var obj = camelFunction(curves, 'curve', name, true);
         if (!obj) {
-            warn$5('Could not locate curve type "' + name + '"');
+            warn$3('Could not locate curve type "' + name + '"');
             obj = curveNatural;
         }
         return obj;
@@ -21883,9 +19344,9 @@ var barChartPrototype = {
             x = this.model.x,
             y = this.model.y,
             viz = this.viz,
-            radius = this.model.radius,
-            bars = chart.selectAll('.group');
-        var width = void 0,
+            radius = this.model.radius;
+        var bars = chart.selectAll('.group'),
+            width = void 0,
             height = void 0,
             xrect = void 0,
             yrect = void 0,
@@ -21917,12 +19378,18 @@ var barChartPrototype = {
             yi = 0;
         }
         data = viz.getStack().keys(groups)(data);
-        rects = bars.data(data).enter().append('g').classed('group', true).attr('fill', function (d) {
+        bars = bars.data(data);
+        bars.exit().transition().style('opacity', 0).remove();
+
+        rects = bars.enter().append('g').classed('group', true).attr('fill', function (d) {
             return sz(d.key);
         }).merge(bars).attr('fill', function (d) {
             return sz(d.key);
         }).attr('stroke', viz.modelProperty('stroke', color)).attr('stroke-opacity', viz.modelProperty('strokeOpacity', color)).selectAll('rect').data(stackedData);
+
         rects.enter().append('rect').attr('x', xrect).attr('y', yrect).attr('height', height).attr('width', width).attr('rx', radius).attr('ry', radius).on("mouseover", viz.mouseOver()).on("mouseout", viz.mouseOut()).merge(rects).transition().attr('x', xrect).attr('y', yrect).attr('height', height).attr('width', width);
+
+        rects.exit().transition().style('opacity', 0).remove();
 
         // add labels
         if (this.model.label) {
@@ -22361,7 +19828,7 @@ createChart('areachart', lineDrawing, {
         lineDarken: 0.2,
         //
         stack: true,
-        stackOrder: 'descending', // stack order
+        stackOrder: 'none', // stack order
         //
         axisX: true,
         axisY: true
@@ -22390,6 +19857,8 @@ createChart('areachart', lineDrawing, {
 
         this.applyTransform(group, this.translate(box.padding.left, box.padding.top));
         this.applyTransform(chart, this.translate(box.margin.left, box.margin.top));
+
+        areas.exit().transition().style('opacity', 0).remove();
 
         var areagroup = areas.enter().append('g').classed('areagroup', true).merge(areas).selectAll('path').data(arealine);
 
@@ -22548,7 +20017,7 @@ createChart('piechart', proportional, {
         }
         if (!model.legendType) return;
         total = total.total();
-        var expr = viewExpression$1(model.legendLabel),
+        var expr = viewExpression(model.legendLabel),
             fmt = format(model.fractionFormat),
             labels = data.map(function (d, idx) {
             return expr.eval({
@@ -22700,7 +20169,7 @@ createChart('pyramidchart', proportional, {
         segments.exit().remove();
 
         if (!model.legendType) return;
-        var expr = viewExpression$1(model.legendLabel),
+        var expr = viewExpression(model.legendLabel),
             self = this,
             labels = data.map(function (d, idx) {
             return expr.eval(self.getContext({
@@ -23109,7 +20578,7 @@ createChart('geochart', {
 
     doDraw: function doDraw(frame, geo) {
         var info = this.getGeoData(frame);
-        if (!info) return warn$5('Topojson data not available - cannot draw topology');
+        if (!info) return warn$3('Topojson data not available - cannot draw topology');
         if (!this._geoPath) this.createGeoPath(geo, info);
         this.update(geo, info);
     },
@@ -23120,9 +20589,17 @@ createChart('geochart', {
             group = this.group(),
             geogroup = this.group('geo'),
             path = this._geoPath,
-            geometryData = geo.feature(info.topology, info.topology.objects[model.geometry]).features,
-            paths = geogroup.selectAll('.geometry').data(geometryData),
+            geometryObject = info.topology.objects[model.geometry],
+            geometryData = geometryObject ? geo.feature(info.topology, geometryObject).features : null,
+            paths = geometryData ? geogroup.selectAll('.geometry').data(geometryData) : null,
             fill = 'none';
+
+        if (!paths) {
+            var objects = Object.keys(info.topology.objects).map(function (key) {
+                return '"' + key + '"';
+            }).join(', ');
+            return warn$3('Could not find *geometry* "' + model.geometry + '" in [' + objects + '] - cannot draw geochart');
+        }
 
         group.transition(this.transition('group0')).attr("transform", this.translate(box.padding.left, box.padding.top));
         geogroup.transition(this.transition('group1')).attr("transform", this.translate(box.margin.left, box.margin.top));
@@ -23182,7 +20659,10 @@ createChart('geochart', {
         var path = this._geoPath,
             projection = path.projection(),
             box = this.boundingBox(),
-            boundGeometry = geo.feature(info.topology, info.topology.objects[model.boundGeometry]).features;
+            boundObject = info.topology.objects[model.boundGeometry],
+            boundGeometry = boundObject ? geo.feature(info.topology, boundObject).features : null;
+
+        if (!boundGeometry) return warn$3('Could not find *boundGeometry* "' + model.boundGeometry + '" for centering - skip centering geochart');
 
         projection.scale(1).translate([0, 0]);
 
@@ -23220,7 +20700,7 @@ createChart('geochart', {
         }, box);
 
         return function (d) {
-            key = d.properties[geoKey];
+            key = d.properties[geoKey] || d[geoKey];
             value = values[key];
             d.choropleth = {
                 label: value[dataLabelKey] || key,
@@ -23233,6 +20713,229 @@ createChart('geochart', {
 });
 
 //
+//  GeoChart
+//  =============
+//
+//  A chart displaying a geographical map
+createChart('geochart2', {
+    // load these libraries - add 'leaflet'?
+    requires: ['d3-geo', 'topojson', 'd3-geo-projection'],
+
+    options: {
+        // Geometry data to display in this chart - must be in the topojson source
+        geometry: 'countries',
+        //
+        // for choropleth maps
+        // geoKey and dataKey are used to match geometry with data
+        geoKey: 'id',
+        dataKey: 'id',
+        dataLabelKey: 'label',
+        dataValueKey: 'value',
+        neighbors: false,
+        // how many color buckets to visualise
+        buckets: 10,
+        choroplethScale: 'quantile',
+        //
+        // specify one of the topojson geometry object for calculating
+        // the projected bounding box
+        boundGeometry: null,
+        // how much to zoom out, 1 = no zoom out, 0.95 to 0.8 are sensible values
+        boundScaleFactor: 0.9,
+        //
+        projection: 'kavrayskiy7',
+        graticule: false,
+        leaflet: false,
+        scale: 200,
+        //
+        // mouseover strategy
+        mouseover: ['darken', 'tooltip']
+    },
+
+    doDraw: function doDraw(frame, geo) {
+        var info = dataInfo(frame);
+        if (!info.topology) return warn$3('Topojson data not available - cannot draw topology');
+        if (!this._geoPath) this.createGeoPath(geo, info);
+        this.update(geo, info);
+    },
+    update: function update(geo, info) {
+        var model = this.getModel(),
+            color = this.getModel('color'),
+            box = this.boundingBox(),
+            group = this.group(),
+            geogroup = this.group('geo'),
+            path = this._geoPath,
+            data = geodata(geo, info, model);
+
+        if (!data) {
+            var objects = Object.keys(info.topology.objects).map(function (key) {
+                return '"' + key + '"';
+            }).join(', ');
+            return warn$3('Could not find *geometry* "' + model.geometry + '" in [' + objects + '] - cannot draw geochart');
+        }
+
+        group.transition(this.transition('group0')).attr("transform", this.translate(box.padding.left, box.padding.top));
+        geogroup.transition(this.transition('group1')).attr("transform", this.translate(box.margin.left, box.margin.top));
+
+        var paths = geogroup.selectAll('.geometry').data(data),
+            fill = this.choropleth(data, box);
+
+        this.center(geo, info);
+
+        paths.enter().append("path").attr("class", "geometry").attr("d", path).style('fill', 'none').style("stroke", this.modelProperty('stroke', color)).on("mouseover", this.mouseOver()).on("mouseout", this.mouseOut()).merge(paths).transition(this.transition('geometry')).attr("d", path).style("stroke", this.modelProperty('stroke', color)).style("fill", fill).style("fill-opacity", color.fillOpacity);
+
+        paths.exit().remove();
+    },
+    createGeoPath: function createGeoPath(geo, info) {
+        var model = this.getModel(),
+            projection = camelFunction(geo, 'geo', model.projection).scale(model.scale),
+            path = geo.geoPath().projection(projection),
+            self = this,
+            lefletMap;
+
+        this._geoPath = path;
+        this.center(geo, info);
+
+        if (model.leaflet) {
+            var leafletId = 'leaflet-' + model.uid,
+                paper = this.paper();
+            this.visualParent.paper.append('div').attr('id', leafletId);
+            lefletMap = new geo.Map(leafletId, { center: [37.8, -96.9], zoom: 4 }).addLayer(new geo.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")), lefletMap.getPanes().overlayPane.appendChild(paper.element);
+            projection = geo.transform({ point: projectPoint });
+            lefletMap.on("viewreset", function () {
+                return self.update(geo, info);
+            });
+        }
+
+        return path;
+
+        function projectPoint(x, y) {
+            var point = lefletMap.latLngToLayerPoint(new geo.LatLng(y, x));
+            this.stream.point(point.x, point.y);
+        }
+    },
+    center: function center(geo, info) {
+        var model = this.getModel();
+        if (!model.boundGeometry) return;
+
+        var path = this._geoPath,
+            projection = path.projection(),
+            box = this.boundingBox(),
+            boundObject = info.topology.objects[model.boundGeometry],
+            boundGeometry = boundObject ? geo.feature(info.topology, boundObject).features : null;
+
+        if (!boundGeometry) return warn$3('Could not find *boundGeometry* "' + model.boundGeometry + '" for centering - skip centering geochart');
+
+        projection.scale(1).translate([0, 0]);
+
+        var b = path.bounds(boundGeometry[0]),
+            topLeft = b[0],
+            bottomRight = b[1],
+            scaleX = (bottomRight[0] - topLeft[0]) / box.innerWidth,
+            scaleY = (bottomRight[1] - topLeft[1]) / box.innerHeight,
+            scale = Math.round(model.boundScaleFactor / Math.max(scaleX, scaleY)),
+            translate = [(box.innerWidth - scale * (bottomRight[0] + topLeft[0])) / 2, (box.innerHeight - scale * (bottomRight[1] + topLeft[1])) / 2];
+
+        projection.scale(scale).translate(translate);
+    },
+
+
+    // choropleth map based on data
+    choropleth: function choropleth(data, box) {
+        var model = this.getModel(),
+            dataLabelKey = model.dataLabelKey,
+            dataValueKey = model.dataValueKey;
+        var dataValue = void 0,
+            valueRange = void 0,
+            colors = void 0,
+            buckets = void 0;
+
+        if (model.neighbors) {
+            dataValue = accessor('rank');
+            valueRange = extent(data, dataValue);
+            buckets = valueRange[1] + 1;
+        } else {
+            dataValue = function dataValue(d) {
+                return d.data[dataValueKey];
+            };
+            buckets = Math.min(model.buckets, data.length);
+            valueRange = niceRange(extent(data, dataValue), buckets);
+        }
+
+        colors = this.getScale(model.choroplethScale).range(this.colors(buckets).reverse()).domain(valueRange);
+
+        this.legend({
+            type: 'color',
+            scale: colors
+        }, box);
+
+        return function (d) {
+            d.label = d.data[dataLabelKey] || d.id;
+            d.value = dataValue(d);
+            d.color = colors(d.value);
+            return d.color;
+        };
+    }
+});
+
+function dataInfo(frame) {
+    var info = {};
+    if (frame.type === 'frameCollection') frame.frames.each(function (df) {
+        if (df.type === 'Topology') info.topology = df;else if (df.type === 'dataframe') info.data = df.data;
+    });else if (frame.type === 'Topology') info.topology = frame;
+    return info;
+}
+
+//
+//  Create a geo data frame
+//  ===========================
+//
+//  * geo - d3-geo & topojson object
+//  * info - object with topology and data frame (optional)
+function geodata(geo, info, config) {
+    var geoKey = config.geoKey,
+        dataKey = config.dataKey;
+    var data = {},
+        features = void 0,
+        key = void 0,
+        props = void 0;
+
+    if (!info.topology) return warn$3('No topology object available');
+    var geometry = info.topology.objects[config.geometry];
+    if (!geometry) return warn$3('Topology object ' + config.geometry + ' is not available');
+
+    var neighbors = config.neighbors ? geo.neighbors(geometry.geometries) : null;
+
+    features = geo.feature(info.topology, geometry).features;
+    if (info.data) data = info.data.reduce(function (o, d) {
+        o[d[dataKey]] = d;return o;
+    }, {});
+
+    features = features.map(function (d) {
+        props = d.properties;
+        key = d[geoKey] || props[geoKey];
+        return {
+            id: key,
+            type: d.type,
+            geometry: d.geometry,
+            data: objectAssign({}, props, data[key])
+        };
+    });
+
+    if (neighbors) features.forEach(function (d, i) {
+        d.neighbors = neighbors[i];
+        d.rank = max(d.neighbors, function (j) {
+            return features[j].rank;
+        }) + 1 | 0;
+    });
+
+    return features;
+}
+
+//
+
+if (inBrowser) {
+    if (window.development) viewProviders.setDebug(true);
+}
 
 objectAssign(visuals.options.dataContext, {
     $geoDataCode: function $geoDataCode(d) {
@@ -23242,7 +20945,6 @@ objectAssign(visuals.options.dataContext, {
         return d ? v + '-' + d : v;
     },
     $region: function $region() {
-        //var country = getCountry(this.filters.country),
         //    source = this.$geoDataCode(),
         //    store = this.dataStore;
     }
@@ -23271,6 +20973,28 @@ function formListener() {}
 function getCountry() {}
 
 exports.mapsVersion = version;
+exports.view = view;
+exports.viewMount = mount$1;
+exports.viewBase = viewBase;
+exports.viewEvents = viewEvents;
+exports.viewModel = model;
+exports.viewExpression = viewExpression;
+exports.viewReady = viewReady;
+exports.viewProviders = viewProviders;
+exports.viewWarn = warn;
+exports.viewDebug = viewDebug;
+exports.viewForms = viewForms;
+exports.viewBootstrapForms = viewBootstrapForms;
+exports.viewUid = uid;
+exports.viewDebounce = viewDebounce;
+exports.jsep = jsep;
+exports.require = require$1;
+exports.viewVersion = version$2;
+exports.resolvedPromise = resolvedPromise;
+exports.viewElement = htmlElement;
+exports.viewTemplate = compile$1;
+exports.viewHtml = html$1;
+exports.jsonResponse = jsonResponse;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

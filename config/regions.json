@@ -1,16 +1,48 @@
 {
-    "type": "geochart",
-    "geochart": {
-        "geometry": "regions",
-        "boundGeometry": "country",
-        "geoKey": "ID_1",
-        "buckets": 6,
-        "leaflet": false
+    "type": "visual",
+    "height": "70%",
+    "mouse": {
+        "over": ["fill", "tooltip"],
+        "fillColor": "#ffeda0"
     },
-    "data": {
-        "expression": "$region()"
+    "data": [
+        {
+            "name": "world-geo",
+            "description": "world topojson geometries",
+            "url": "https://unpkg.com/world-atlas@1.1.4/world/50m.json",
+            "cached": true
+        },
+        {
+            "name": "world-data",
+            "url": "https://unpkg.com/world-atlas@1.1.4/world/50m.tsv",
+            "cached": true
+        },
+        {
+            "name": "world",
+            "source": ["world-geo", "world-data"],
+            "cached": true
+        }
+    ],
+    "margin": "5%",
+    "legend": {
+        "location": null
     },
-    "margin": {
-        "right": "25%"
-    }
+    "layers": [
+        {
+            "type": "geochart2",
+            "geochart2": {
+                "geometry": "countries",
+                "boundGeometry": "land",
+                "boundScaleFactor": 1.0,
+                "dataKey": "iso_n3",
+                "dataLabelKey": "name",
+                "neighbors": true,
+                "buckets": 6
+            },
+            "data": "world",
+            "tooltip": {
+                "html": "d.label"
+            }
+        }
+    ]
 }

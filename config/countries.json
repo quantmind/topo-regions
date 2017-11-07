@@ -26,3 +26,20 @@
         }
     ]
 }
+,
+{
+    "type": "foo",
+    "geochart": {
+        "geometry": "regions",
+        "boundGeometry": "country",
+        "geoKey": "ID_1",
+        "buckets": 6,
+        "leaflet": false
+    },
+    "data": {
+        "expression": "$region()"
+    },
+    "margin": {
+        "right": "25%"
+    }
+}
